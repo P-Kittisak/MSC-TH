@@ -1,0 +1,218 @@
+extends info
+block cid
+  script(src='/js/jquery-3.6.0.min.js')
+block content
+  -function formatMoney(inum){  // ฟังก์ชันสำหรับแปลงค่าตัวเลขให้อยู่ในรูปแบบ เงิน
+    -var s_inum=new String(inum);
+    -var num2=s_inum.split(".");
+    -var n_inum="";  
+    -if(num2[0]!=undefined){
+      -var l_inum=num2[0].length;  
+      -for(i=0;i<l_inum;i++){  
+          -if(parseInt(l_inum-i)%3==0){  
+              -if(i==0){  
+                  -n_inum+=s_inum.charAt(i);         
+              -}else{  
+                  -n_inum+=","+s_inum.charAt(i);         
+              -}     
+          -}else{  
+              -n_inum+=s_inum.charAt(i);  
+          -}  
+      -}  
+    -}else{
+        -n_inum=inum;
+    -}
+    -if(num2[1]!=undefined){
+        -n_inum+="."+num2[1];
+    -}
+    -return n_inum;
+  -}
+  -var totalQuantity = 0;
+  -var SumTotal = 0;
+  each Order in order
+    section
+      .container-xxl.flex-grow-1.container-p-y
+        h4.fw-bold.py-3.mb-4
+          a(href='/Account/order')
+            span.text-muted.fw-light= '\u00a0'+'\u00a0'+'\u00a0'+'\u00a0'+'\u00a0'+'\u00a0'+'คำสั่งซื้อ / '
+          span(style="color:#566a7f")="หมายเลขคำสั่งซื้อ : "+Order.order_Id
+        .row
+          .col-md-6
+            .m-l-30.m-r--38.m-lr-0-xl
+              h2="หมายเลขคำสั่งซื้อ : #"+Order.order_Id
+              if(Order.order_Status == 0)
+                h2(style="color:black") สถานะ : รอการชำระเงิน
+              else if(Order.order_Status == 1)
+                h2(style="color:#696cff") สถานะ : รอร้านค้าตรวจสอบ
+              else if(Order.order_Status == 2)
+                h2(style="color:blue") สถานะ : กำลังจัดเตรียมพัสดุ
+              else if(Order.order_Status == 3)
+                h2(style="color:green") สถานะ : จัดส่งแล้ว
+                h2(style="color:green")="หมายเลขพัสดุ : " + Order.tracking
+              else if(Order.order_Status == 4)
+                h2(style="color:red") สถานะ : ยกเลิก
+                h5(style="color:red")="เนื่องจาก : " + Order.comment
+                each Bank in bank
+                  h5(style="color:red")="หากมีข้อสงสัยกรุณาติดต่อร้านค้า เบอร์โทร : " + Bank.people_Community_Phone
+              else if(Order.order_Status == 5)
+                h2(style="color:red") สถานะ : ชำระเงินใหม่
+                h5(style="color:red")="เนื่องจาก : " + Order.comment
+                each Bank in bank
+                  h5(style="color:red")="หากมีข้อสงสัยกรุณาติดต่อร้านค้า เบอร์โทร : " + Bank.people_Community_Phone
+            .m-l-30.m-r--38.m-lr-0-xl
+              .wrap-table-shopping-cart
+                table.table-shopping-cart(style="width:100%")
+                  thead
+                    tr.table_head
+                      th.text-center ลำดับที่
+                      th
+                      th.text-center(class="container d-flex justify-content-center") สินค้า
+                      th.text-center ราคา
+                      th.text-center(class="container d-flex justify-content-center") จำนวน
+                      th.text-center ราคารวม
+                  tbody
+                    each item,index in product
+                      tr.table_row
+                        td.text-center=index+1
+                        td
+                          .how-itemcart
+                            a(href="/cat/" + item.category_Name + "/" + item.product_Id + "/" + item.product_Name)
+                              img(class="container d-flex justify-content-center" width="100" height="100" src="/images/product/" + item.productImage, alt=item.product_Name)
+                        td
+                          if item.product_Name.length > 30
+                            a(href="/cat/" + item.category_Name + "/" + item.product_Id + "/" + item.product_Name)=item.product_Name.substring(0,30)+"..."
+                            br
+                            if item.community_Shop_Name.length > 30
+                              a=item.community_Shop_Name.substring(0,30)+"..."
+                            else
+                              a=item.community_Shop_Name
+                          else
+                            a(href="/cat/" + item.category_Name + "/" + item.product_Id + "/" + item.product_Name)=item.product_Name
+                            br
+                            if item.community_Shop_Name.length > 30
+                              a=item.community_Shop_Name.substring(0,30)+"..."
+                            else
+                              a=item.community_Shop_Name
+                        td.text-center="฿ " + formatMoney(item.price)
+                          -SumTotal += item.TotalPrice
+                        td.text-center=item.quantity
+                          -totalQuantity += item.quantity
+                        td.text-center="฿ " + formatMoney(item.TotalPrice)
+          .col-md-6
+            .bor10.p-lr-40.p-t-30.p-b-40.m-l-63.m-r-40.m-lr-0-xl.p-lr-15-sm
+              h2.text-center(style="color:#6c7ae0") ที่อยู่ในการจัดส่ง
+              table(style="width:100%")
+                tbody
+                  tr
+                    td
+                      h5(style="color:#6c7ae0")="ชื่อ"
+                    td(class="font-weight-bold")
+                      h5='\u00a0'+Order.fullname
+                  tr 
+                    td(style="width:10%")
+                      h5(style="color:#6c7ae0")="ที่อยู่:"
+                    td
+                      h5='\u00a0'+Order.address
+                  tr 
+                    td 
+                    td
+                      h5='\u00a0'+Order.amphures_name + " " + Order.tambons_name
+                  tr 
+                    td 
+                    td
+                      h5='\u00a0'+Order.provinces_name + " " + Order.zip_code
+                  tr 
+                    td 
+                    td
+                      h5='\u00a0'+"โทร." + Order.phone
+            .bor10.p-lr-40.p-t-30.p-b-40.m-l-63.m-r-40.m-lr-0-xl.p-lr-15-sm
+              h3(style="color:#6c7ae0") สรุปรายการคำสั่งซื้อ
+                table(style="width:70%")
+                  tbody
+                    tr
+                      td.text-left
+                        span.mtext-101.cl2="รวม ( " + totalQuantity + " สินค้า )"
+                      td
+                        span.mtext-101.cl2(style="color:#6c7ae0")=formatMoney(SumTotal)
+                      td ฿
+                    tr
+                      td
+                        span.mtext-101.cl2="ค่าส่ง :"
+                      td
+                        span.mtext-101.cl2(style="color:#6c7ae0")=Order.tranship
+                      td ฿
+                    tr
+                      td
+                        span.mtext-101.cl2="ราคารวมทั้งหมด:"
+                      td
+                        span.mtext-101.cl2(style="color:#6c7ae0")=formatMoney(parseFloat(Order.net_Price*1+parseInt(Order.tranship)).toFixed(2))
+                      td ฿
+              if Order.order_Status == 0 || Order.order_Status == 1 || Order.order_Status == 5
+                hr.divider-w.mb-10
+                form.dev-form(action='/Account/order/detail/' + Order.order_Id + "/cancel", method='POST')
+                  button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit' style="background-color:#a52a2a;")
+                    = ' ยกเลิกคำสั่งซื้อ'
+                hr.divider-w.mb-10
+                div(class="container d-flex justify-content-center")
+                  h6(style="color:red") ***หมายเหตุ หากกดยกเลิกแล้วไม่สามารถแก้ไขได้กรุณาระมัดระวังในการกด***
+        if Order.order_Status == 0 || Order.order_Status == 1 || Order.order_Status == 5
+          form.dev-form(action='/Account/order/detail/' + Order.order_Id + "/confirm", method='POST' enctype="multipart/form-data")
+            each Bank in bank
+              .row
+                .col-md-12
+                  hr.divider-w.mb-10
+                  h2.text-center แจ้งชำระเงิน
+                  hr.divider-w.mb-10
+                .col-md-16
+                  div(class="container d-flex justify-content-center") 
+                    h2.text-center='\u00a0'+'\u00a0'+'\u00a0'+'\u00a0'+ "QR-CODE :"
+                    if Bank.QR_Code == "null"
+                      br
+                      h2.text-center(style="color:red")='\u00a0'+'\u00a0'+'\u00a0'+'\u00a0'+"ไม่มี QR-Code"
+                      hr.divider-w.mb-10
+                    else
+                      .col
+                        a(href="/images/QR_Code/" + Bank.QR_Code target="_blank")
+                          img(width="300" height="300" src='/images/QR_Code/' + Bank.QR_Code  alt="IMG-PRODUCT")
+                .col-md-7
+                  h2.text-center(style="color:#6c7ae0")= "บัญชีธนาคาร : " +Bank.bank_Name
+                  hr.divider-w.mb-10
+                  h4='\u00a0'+'\u00a0'+'\u00a0'+'\u00a0'+"เลขบัญชีธนาคาร : "+Bank.bank_Number
+                  h4='\u00a0'+'\u00a0'+'\u00a0'+'\u00a0'+"ชื่อเจ้าของบัญชี : " + Bank.people_Community_Fullname
+                  h4='\u00a0'+'\u00a0'+'\u00a0'+'\u00a0'+"เบอร์โทรติดต่อ : " +Bank.people_Community_Phone
+                  hr.divider-w.mb-10
+                  span.mtext-101.cl2 แนบสลิปโอนเงิน
+                  .input-group
+                    input.btn.btn-outline-primary.form-control(name='slip', type='file', accept='image/png, image/jpeg, image/jpg', aria-label='Upload' required=true)
+                    //- button#inputGroupFileAddon04.btn.btn-outline-primary(type='button') อัพโหลดสลิป
+                  hr.divider-w.mb-10
+                  span.mtext-101.cl2(style="color:#6c7ae0")="รวมสินค้าทั้งหมด " + totalQuantity + " ชิ้น " + "  จำนวนยอด " + formatMoney(parseFloat(Order.net_Price*1+parseInt(Order.tranship)).toFixed(2)) + " บาท"
+                  hr.divider-w.mb-10
+                  span.mtext-101.cl2 วัน/เวลา ที่โอนเงิน
+                  input#html5-datetime-local-input.form-control(type='datetime-local',name="dateSlip" value='' required=true)
+                  br
+                  button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit')
+                    = ' ยืนยันการแจ้งชำระเงิน'
+                  hr.divider-w.mb-10
+                div(class="container d-flex justify-content-center")
+                  label(style="color:red") ***หมายเหตุ สามารถแก้ไขสลิปโอนเงินได้เรื่อยๆจนกว่าสถานะจะเปลี่ยนเป็นกำลังจัดเตรียมสินค้า***
+                 
+  script(src='/shop/assets/js/jquery.dataTables.min.js')
+  script(src='/shop/assets/js/dataTables.bootstrap5.min.js')
+  script.
+    $('#myModal').on('hidden.bs.modal', function (e) {
+      // do something...
+    })
+    $(document).ready( function (){
+      $('#orderTableUser').DataTable({
+        "language": {
+          url:'/shop/assets/json/th.json'
+        },
+        "DisplayLength" : 10 , 
+        "scrollY":        "1000px",
+        "scrollCollapse": true,
+        "paging": true,
+        "footer":false,
+        "order": [],
+      });
+    });

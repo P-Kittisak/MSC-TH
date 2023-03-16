@@ -1,0 +1,126 @@
+extends layout
+block content
+    -function formatMoney(inum){  // ฟังก์ชันสำหรับแปลงค่าตัวเลขให้อยู่ในรูปแบบ เงิน
+        -var s_inum=new String(inum);
+        -var num2=s_inum.split(".");
+        -var n_inum="";  
+        -if(num2[0]!=undefined){
+        -var l_inum=num2[0].length;  
+        -for(i=0;i<l_inum;i++){  
+            -if(parseInt(l_inum-i)%3==0){  
+                -if(i==0){  
+                    -n_inum+=s_inum.charAt(i);         
+                -}else{  
+                    -n_inum+=","+s_inum.charAt(i);         
+                -}     
+            -}else{  
+                -n_inum+=s_inum.charAt(i);  
+            -}  
+        -}  
+        -}else{
+            -n_inum=inum;
+        -}
+        -if(num2[1]!=undefined){
+            -n_inum+="."+num2[1];
+        -}
+        -return n_inum;
+    -}
+    each ProductDetail in product
+        .container
+            .bread-crumb.flex-w.p-l-25.p-r-15.p-t-30.p-lr-0-lg
+                a.stext-109.cl8.hov-cl1.trans-04(href='/') หน้าแรก
+                    i.fa.fa-angle-right.m-l-9.m-r-10(aria-hidden='true')
+                a.stext-109.cl8.hov-cl1.trans-04(name="category" href='/search/' + ProductDetail.category_Id + '/' + ProductDetail.category_Name   value=ProductDetail.category_Id)=ProductDetail.category_Name
+                    i.fa.fa-angle-right.m-l-9.m-r-10(aria-hidden='true')
+                span.stext-109.cl4=ProductDetail.product_Name
+        section.sec-product-detail.bg0.p-t-65.p-b-60
+            .container
+                .row
+                    .col-md-6.col-lg-7.p-b-30
+                        .p-l-25.p-r-30.p-lr-0-lg
+                            .wrap-slick3.flex-sb.flex-w
+                                .wrap-slick3-dots
+                                .wrap-slick3-arrows.flex-sb-m.flex-w
+                                .slick3.gallery-lb
+                                    each Product in product
+                                        .item-slick3(data-thumb='/images/product/' + Product.productImage0)
+                                            .wrap-pic-w.pos-relative
+                                                img(src='/images/product/' + Product.productImage0)
+                                                a.flex-c-m.size-108.how-pos1.bor0.fs-16.cl10.bg0.hov-btn3.trans-04(href='/images/product/' + Product.productImage0)
+                                                    i.fa.fa-expand
+                                        if Product.productImage1 != null && Product.productImage1 != 'undefined' 
+                                            .item-slick3(data-thumb='/images/product/' + Product.productImage1)
+                                                .wrap-pic-w.pos-relative
+                                                    img(src='/images/product/' + Product.productImage1)
+                                                    a.flex-c-m.size-108.how-pos1.bor0.fs-16.cl10.bg0.hov-btn3.trans-04(href='/images/product/' + Product.productImage1)
+                                                        i.fa.fa-expand
+                                        if Product.productImage2 != null && Product.productImage2 != 'undefined'
+                                            .item-slick3(data-thumb='/images/product/' + Product.productImage2)
+                                                .wrap-pic-w.pos-relative
+                                                    img(src='/images/product/' + Product.productImage2)
+                                                    a.flex-c-m.size-108.how-pos1.bor0.fs-16.cl10.bg0.hov-btn3.trans-04(href='/images/product/' + Product.productImage2)
+                                                        i.fa.fa-expand
+                                        if Product.productImage3 != null && Product.productImage3 != 'undefined'
+                                            .item-slick3(data-thumb='/images/product/' + Product.productImage3)
+                                                .wrap-pic-w.pos-relative
+                                                    img(src='/images/product/' + Product.productImage3)
+                                                    a.flex-c-m.size-108.how-pos1.bor0.fs-16.cl10.bg0.hov-btn3.trans-04(href='/images/product/' + Product.productImage3)
+                                                        i.fa.fa-expand
+                                        if Product.productImage4 != null && Product.productImage4 != 'undefined'
+                                            .item-slick3(data-thumb='/images/product/' + Product.productImage4)
+                                                .wrap-pic-w.pos-relative
+                                                    img(src='/images/product/' + Product.productImage4)
+                                                    a.flex-c-m.size-108.how-pos1.bor0.fs-16.cl10.bg0.hov-btn3.trans-04(href='/images/product/' + Product.productImage4)
+                                                        i.fa.fa-expand
+                                        if Product.productImage5 != null && Product.productImage5 != 'undefined'
+                                            .item-slick3(data-thumb='/images/product/' + Product.productImage5)
+                                                .wrap-pic-w.pos-relative
+                                                    img(src='/images/product/' + Product.productImage5)
+                                                    a.flex-c-m.size-108.how-pos1.bor0.fs-16.cl10.bg0.hov-btn3.trans-04(href='/images/product/' + Product.productImage5)
+                                                        i.fa.fa-expand
+                                        if Product.productImage6 != null && Product.productImage6 != 'undefined'
+                                            .item-slick3(data-thumb='/images/product/' + Product.productImage6)
+                                                .wrap-pic-w.pos-relative
+                                                    img(src='/images/product/' + Product.productImage6)
+                                                    a.flex-c-m.size-108.how-pos1.bor0.fs-16.cl10.bg0.hov-btn3.trans-04(href='/images/product/' + Product.productImage6)
+                                                        i.fa.fa-expand
+                    .col-md-6.col-lg-5.p-b-30
+                        .p-r-50.p-t-5.p-lr-0-lg
+                            h4.mtext-105.cl2.js-name-detail.p-b-14=ProductDetail.product_Name
+                            h4.mtext-103.cl2.js-name-detail.p-b-1="ร้านค้า : "+ProductDetail.community_Shop_Name
+                            h4.mtext-103.cl2.js-name-detail.p-b-1="เบอร์โทรติดต่อร้านค้า : "+ProductDetail.people_Community_Phone
+                            h4.mtext-103.cl2.js-name-detail.p-b-1="ชุมชน : "+ProductDetail.community_name
+                            h4.mtext-103.cl2.js-name-detail.p-b-1="เบอร์โทรติดต่อชุมชน : "+ProductDetail.people_Community_Phone
+                            h4.mtext-103.cl2.js-name-detail.p-b-1="หมวดหมู่ : "+ProductDetail.category_Name
+                            h4.mtext-106.cl2="ราคา : ฿ " + ProductDetail.product_Price
+                            p(class="stext-102 cl3 p-t-23")="รายละเอียดสินค้า : "+ProductDetail.product_Detail
+                            br
+                            br
+                            .size-204.flex-w.flex-m.respon6-next(class="container d-flex justify-content-center")
+                                if ProductDetail.product_Quantity < 1
+                                    -var Quantity = 'สินค้าหมด'
+                                    h2(style="color:red")=Quantity
+                                    br
+                                else
+                                    form(action='/cart/' + ProductDetail.product_Id + '/add', method='POST')
+                                        div(class="container d-flex justify-content-center") 
+                                            h4="มีสินค้าทั้งหมด : "+ProductDetail.product_Quantity + " ชิ้น"
+                                        //- div(class="container d-flex justify-content-center")
+                                        //-     input.mtext-104.cl3.txt-center.num-product(type='number', name="quantity",value="1",min=1, max=ProductDetail.product_Quantity)
+                                        //- .size-204.flex-w.flex-m.respon6-next
+                                        //-     .wrap-num-product.flex-w.m-r-20.m-tb-10
+                                        //-         .btn-num-product-down.cl8.hov-btn3.trans-04.flex-c-m
+                                        //-             i.fs-16.zmdi.zmdi-minus
+                                        //-         input.mtext-104.cl3.txt-center.num-product(type='number',min=1,max=ProductDetail.product_Quantity, name='quantity', value='1')
+                                        //-         .btn-num-product-up.cl8.hov-btn3.trans-04.flex-c-m
+                                        //-             i.fs-16.zmdi.zmdi-plus
+                                        if customer
+                                            if(customer.user_status == 0)
+                                                div(class="container d-flex justify-content-center block2-txt-child2 flex-r p-t-3")
+                                                    button.btn.btn-outline-dark(type='submit')
+                                                        i(class="zmdi zmdi-shopping-cart")
+                                                            a=" เพิ่มสินค้าลงตะกร้า"
+    script(src='/vendor/jquery/jquery-3.2.1.min.js')
+    //- script(src="/js/bootstrap-input-spinnerproduct.js")
+    //- script.
+    //-     $("input[type='number']").inputSpinner();

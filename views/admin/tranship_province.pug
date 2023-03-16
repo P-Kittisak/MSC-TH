@@ -1,0 +1,72 @@
+extends layoutAdmin
+block order
+  li.menu-item
+    a.menu-link(href='/admin' style="color:#696cff")
+      i.menu-icon.tf-icons.bx.bxs-widget
+      div(data-i18n='Analytics') สรุปยอดขายสินค้า
+  li.menu-item
+    a.menu-link(href='/admin/category' style="color:#696cff")
+      i.menu-icon.tf-icons.bx.bx-cube-alt
+      div(data-i18n='Analytics') จัดการหมวดหมู่สินค้า
+  li.menu-item
+    a.menu-link(href='/admin/request' style="color:#696cff")
+      i.menu-icon.tf-icons.bx.bx-body
+      div(data-i18n='Analytics') คำร้องขอเพิ่มชุมชน
+  li.menu-item.active
+    a.menu-link(href='/admin/tranship' style="color:#696cff")
+      i.menu-icon.tf-icons.bx.bx-car
+      div(data-i18n='Analytics') จัดการค่าส่ง
+  li.menu-item
+    a.menu-link(href='/admin/changePassword' style="color:#696cff")
+      i.menu-icon.tf-icons.bx.bx-message-square-edit
+      div(data-i18n='Analytics') แก้ไขรหัสผ่าน
+//- end navbar
+block contentAdmin
+  section 
+    .container-xxl.flex-grow-1.container-p-y
+      h4.fw-bold.py-3.mb-4 
+        a
+          span.text-muted.fw-light จัดการค่าส่ง /
+          |  จัดการค่าส่งต่างจังหวัด
+      .row
+        .col-md-12
+          ul.nav.nav-pills.flex-column.flex-md-row.mb-3
+            li.nav-item
+              a.nav-link(href='/admin/tranship')
+                i.bx.bx-link-alt.me-1
+                |  จัดการค่าส่งกรุงเทพ
+            li.nav-item
+              a.nav-link.active(href='/admin/tranship_province')
+                i.bx.bx-link-alt.me-1
+                |  จัดการค่าส่งต่างจังหวัด
+          .card.mb-4
+            h3.card-header(style="color:#696cff") จัดการค่าส่งต่างจังหวัด
+            // Account
+            hr.my-0
+            .card-body
+              form#formAccountSettings(action="/admin/tranship_province", method='POST')
+                .row
+                  .mb-3.col-md-4
+                    h4.text-center น้ำหนักไม่เกิน
+                  .mb-3.col-md-4
+                    h4.text-center ราคาค่าส่ง
+                  .mb-3.col-md-4
+                    h4.text-center น้ำหนัก - ค่าส่งเดิม
+                  each TranshipProvince in transhipProvince
+                    .mb-3.col-md-4
+                      .input-group
+                        span.input-group-text น้ำหนัก
+                        input.form-control.text-center(name='tranSportShip',type='number', placeholder='น้ำหนักของสินค้า เช่น 0.25, 1, 2.25, 5, 10',min="0" step="0.25" max="999999" pattern="^\d*(.\d{0,2})?$" value=TranshipProvince.tranSportShip autofocus required=true)
+                        span.input-group-text กก.(กิโลกรัม)
+                    .mb-3.col-md-4
+                      .input-group
+                        span.input-group-text ฿
+                        input.form-control.text-center(name='tranShip',type='number', placeholder='ค่าส่ง',min="1" max="999999" value=TranshipProvince.tranship required=true)
+                        span.input-group-text บาท
+                    .mb-3.col-md-4
+                      h5="ค่าส่งเดิม : น้ำหนัก " + TranshipProvince.tranSportShip + " กก. ค่าส่ง : " + TranshipProvince.tranship + " บาท"
+                    hr.divider-w.mb-10
+                    input.form-control.text-center(name='tranShipId',type='number', placeholder='ค่าส่ง',min="1" max="999999" value=TranshipProvince.tranship_Id hidden required=true)
+                .d-grid.gap-2.col-lg-6.mx-auto
+                  button.btn.btn-primary.btn-lg(type='submit') บันทึกการเปลี่ยนแปลง
+                  //- button.btn.btn-outline-secondary(type='reset') ยกเลิก

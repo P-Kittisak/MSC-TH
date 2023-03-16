@@ -1,0 +1,88 @@
+extends info
+block content
+  div(class="d-flex justify-content-center")
+    .col-lg-6
+      .card
+        .card-body
+          div
+            h3.font-alt(class="d-flex justify-content-center" style="color:#6C7AE0") เพิ่มที่อยู่
+            form.dev-form(action='/Account/user' + '/address/addAddress', method='POST')
+              .form-group
+                h5(for='fullname') ชื่อ-นามสกุล
+                input#fullname.form-control(type='text', name='fullname',maxlength="70" placeholder='ชื่อ-นามสกุล',autofocus required=true)
+              .form-group
+                h5(for='phone') เบอร์โทรศัพท์
+                input#phone.form-control(type='tel', name='phone', placeholder='0XX-XXX-XXXX',title="กรุณาใส่หมายเลข 0123456789" pattern="[0-9]{10}" required=true)
+              .form-group
+                h5(for='address') ที่อยู่
+                //- textarea#address.form-control(type='text',cols="15", rows="4", name='address',maxlength="255", placeholder='บ้านเลขที่ / ซอย / ถนน' required=true)
+                input#address.form-control(type='text', name='address',maxlength="255", placeholder='บ้านเลขที่ / ซอย / ถนน' required=true)
+              .form-group
+                h5(for='Province') จังหวัด  :
+                select.form-control.form-control-sm-2(name="Province" id="Province" onChange="ChooseProvince(this)" required=true)
+                  option(value="0")|---เลือกจังหวัด---
+                  each province in provinces
+                    option(value=province.provinces_id name="province")=province.provinces_name
+              .form-group
+                h5(for='Amphure') อำเภอ / เขต
+                select.form-control.form-control-sm-2(name="Amphure" class="Amphure" id="Amphure" onChange="ChooseAmphures(this)" required=true) 
+                  option(value="")|---เลือกอำเภอ---
+              .form-group
+                h5(for='Tambon') ตำบล / แขวง
+                select.form-control.form-control-sm-2(name="Tambon" class="Tambon" id="Tambon" required=true)        
+                  option(value="")|---เลือกตำบล---
+              .form-group
+                h5(for='zip_code') รหัสไปรษณีย์
+                input.form-control.form-control-sm-2(type="text" id="Zipcode" name="zip_code" readonly required=true)
+              .text-center
+                button.btn.btn-primary.size-121(type='submit') เพิ่มที่อยู่
+          form.dev-form(action='/Account/user' +  '/edit', method='GET')
+            button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit')
+              i.fa.fa-edit
+              = ' แก้ไขข้อมูลส่วนตัว'
+          form.dev-form(action='/Account/user/', method='GET')
+            button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit')
+              i.fa.fa-home
+              = ' ข้อมูลส่วนตัว'
+          form.dev-form(action='/Account/user' +  '/address', method='GET')
+            button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit')
+              i.fa.fa-edit
+              = ' ที่อยู่'
+  script(src='/js/jquery-3.6.0.min.js')
+  script.
+    function ChooseProvince(province){
+        fetch('addAddress/'+province.value)
+        .then(res=> res.json())
+        .then(data =>{
+            const Amphure= document.getElementById("Amphure");
+            Amphure.innerHTML='<option value="">---เลือกอำเภอ---</option>';
+            const Tambon= document.getElementById("Tambon");
+            Tambon.innerHTML='<option value="">---เลือกตำบล---</option>';
+            const ZipCode=document.getElementById("Zipcode");
+            document.getElementById("Zipcode").value='';
+            data.forEach(value=>{
+                var option=document.createElement('option');
+                option.value=value.amphures_id
+                option.text=value.amphures_name
+                Amphure.appendChild(option);
+            })
+        });
+    }
+    function ChooseAmphures(Amphure){
+        var province=document.getElementById("Province").value;
+        fetch('addAddress/'+province+'/'+Amphure.value)
+        .then(res=> res.json())
+        .then(data =>{
+            const Tambon= document.getElementById("Tambon");
+            Tambon.innerHTML='<option value="">---เลือกตำบล---</option>';
+            const ZipCode=document.getElementById("Zipcode");
+            ZipCode.value="";
+            data.forEach(value=>{
+                var option=document.createElement('option');
+                option.value=value.tambons_id
+                option.text=value.tambons_name
+                ZipCode.value=value.zip_code
+                Tambon.appendChild(option);
+            })
+        });
+    }

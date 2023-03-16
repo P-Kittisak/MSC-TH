@@ -1,0 +1,115 @@
+extends layout
+block cid
+    link(rel='stylesheet', href='/css/style.css')
+block content
+    div(class="d-flex justify-content-center")
+        .col-lg-6
+            .card
+                .card-body
+                    h3.card-title.text-center(class="d-flex justify-content-center" style="color:#6C7AE0") สมัครร้านค้าชุมชนกับ MSC Thailand
+                    h4.card-title.text-center(class="d-flex justify-content-center" style="color:red") (สำหรับร้านค้าที่มีชุมชนอยู่ในระบบกับเราแล้วเท่านั้น)
+                    // Vertical Form
+                    form(class='form', action='/sign-up-shop', method='POST')
+                        if checkOutNoti
+                            if (signUpShopError != '')
+                                p(class="alert alert-danger alert-dismissible fade show" role="alert")=signUpShopError
+                            else
+                                p(class="alert alert-danger alert-dismissible fade show" role="alert")=checkOutNoti
+                        else
+                            if (signUpShopError != '')
+                                p(class="alert alert-danger alert-dismissible fade show" role="alert")=signUpShopError
+                        .col-12
+                            h5 ชื่อร้านค้า
+                            .wrap-input1.w-full.p-b-4
+                                input#communityShopName.form-control.input1.bg-none.plh1.stext-107.cl7(type='text', name='communityShopName',maxlength="30", placeholder='ชื่อร้านค้าเช่น ร้านขายถุงผ้าชุมชน.......' autofocus required=true)
+                                .focus-input1.trans-04
+                        //- br
+                        //- .col-12
+                        //-     h5 จังหวัด  : 
+                        //-     select.form-control.form-control-sm-2(name="Province" id="Province" onChange="ChooseProvince(this)" required=true)
+                        //-         option(value="")|---เลือกจังหวัด---
+                        //-         each province in provinces
+                        //-             option(value=province.provinces_id name="province")=province.provinces_name
+                        //- br
+                        //- .col-12
+                        //-     h5 อำเภอ  : 
+                        //-     select.form-control.form-control-sm-2(name="Amphure" class="Amphure" id="Amphure" onChange="ChooseAmphures(this)" required=true) 
+                        //-         option(value="")|---เลือกอำเภอ---
+                        //- br
+                        //- .col-12
+                        //-     h5(for="Tambon") ตำบล  :
+                        //-     select.form-control.form-control-sm-2(name="Tambon" class="Tambon" id="Tambon" onChange="ChooseTambon(this)"  required=true)        
+                        //-         option(value="")|---เลือกตำบล---
+                        br
+                        .col-12
+                            h5(for="Community") เลือกชุมชนที่จะลงทะเบียนร้านค้า  : 
+                            select.form-control.form-control-sm-2(name="Community" class="Community" id="Community" required=true)        
+                                option(value="")|---เลือกชุมชน---
+                                each community in communities
+                                    option(value=community.community_id)=community.community_name
+                        br
+                        .col-12
+                            h5="ชื่อบัญชีผู้ใช้ (Username)"
+                            .wrap-input1.w-full.p-b-4
+                                input#username.form-control.input1.bg-none.plh1.stext-107.cl7(type='text', name='username',maxlength="40" placeholder='ชื่อบัญชีผู้ใช้ เช่น UserShopNew2565' required=true)
+                                .focus-input1.trans-04
+                        br
+                        .col-12
+                            h5="รหัสผ่าน (password)"
+                            .wrap-input1.w-full.p-b-4
+                                input#password.form-control.input1.bg-none.plh1.stext-107.cl7(type='password',minlength="8" maxlength="12" name='password', title="รหัสผ่านต้องมีอักขระอย่างน้อย 8 ตัว" placeholder='············' required=true)
+                                .focus-input1.trans-04
+                            label(style="color:red") ***รหัสผ่านต้องมีอักษรหรือตัวเลขอย่างน้อย 8 ตัวแต่ไม่เกิน 12 ตัว***
+                            p(id="error-nwl")
+                                
+                        br
+                        .col-12
+                            h5 ชื่อ-นามสกุล
+                            .wrap-input1.w-full.p-b-4
+                                input#F_name.form-control.input1.bg-none.plh1.stext-107.cl7(type='text', name='fullname',maxlength="70", placeholder='ชื่อ-นามสกุล' required=true)
+                                .focus-input1.trans-04
+                        br
+                        .col-12
+                            h5 เบอร์โทรศัพท์
+                            .wrap-input1.w-full.p-b-4
+                                input#peopleCommunityPhone.form-control.input1.bg-none.plh1.stext-107.cl7(type='tel', name='peopleCommunityPhone',title="กรุณาใส่หมายเลข 0123456789", placeholder='0XX-XXX-XXXX',pattern="[0-9]{10}" required=true)
+                                .focus-input1.trans-04
+                        br
+                        .col-12
+                            h5 เลขบัญชีธนาคารของร้าน
+                            .wrap-input1.w-full.p-b-4
+                                input#bankNumber.form-control.input1.bg-none.plh1.stext-107.cl7(type='text',maxlength="30" name='bankNumber', placeholder='เลขบัญชีธนาคารของร้าน' required=true)
+                                .focus-input1.trans-04
+                        br
+                        .col-12
+                            h5 ชื่อธนาคาร
+                            select.form-control.form-control-sm-2(name="bankName" aria-label="Default select example"  required=true) 
+                                option(selected value='') ---เลือกธนาคาร---
+                                    option(value="ธนาคารไทยพาณิชย์") ธนาคารไทยพาณิชย์
+                                    option(value="ธนาคารกรุงเทพ") ธนาคารกรุงเทพ
+                                    option(value="ธนาคารแห่งประเทศไทย") ธนาคารแห่งประเทศไทย
+                                    option(value="ธนาคารกสิกรไทย") ธนาคารกสิกรไทย
+                                    option(value="ธนาคารยูโอบี") ธนาคารยูโอบี
+                                    option(value="ธนาคารกรุงไทย") ธนาคารกรุงไทย
+                        br
+                        //- .col-12
+                        //-     .form-group
+                        //-         h5 เลขบัตรประชาชน 13 หลัก 
+                        //-         h5(style="color:red") (ใช้เพื่อตรวจสอบเท่านั้น ไม่มีการเก็บเลขบัตรประชาชน)
+                        //-         input#cid.form-control(type='tel', name='cid', placeholder='X-XXXX-XXXXX-XX-X', autocomplete='off', title='National ID Input', aria-labelledby='InputLabel', aria-invalid='', aria-required='true', required=true, tabindex='1')
+                        //- #errorMessage.text.error(aria-hidden='true', aria-label='Invalid ID', role='alert')
+                        //-     p เลขบัตรประชาชนผิด หรือ ไม่ถูกต้อง กรุณากรอกเลขบัตรประชาชนใหม่อีกครั้ง
+                        //- #successMessage.text.success(aria-hidden='true', aria-label='Valid ID', role='alert')
+                        //-     p เลขบัตรประชาชนถูกต้อง
+                        .col-12
+                            h5 อีเมล
+                            .wrap-input1.w-full.p-b-4
+                                input#email.form-control.input1.bg-none.plh1.stext-107.cl7(type='email', name='email',maxlength="100" placeholder='XXXXXX@gmail.com' required=true)
+                                .focus-input1.trans-04
+                        hr.divider-w.mb-10
+                        button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit') สมัคร
+                        hr.divider-w.mb-10
+    //- cid
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/imask/3.4.0/imask.min.js')
+    script(src='/vendor/jquery/jquery-3.2.1.min.js')
+    script(src='/js/script.js')

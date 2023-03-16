@@ -1,0 +1,129 @@
+extends layout
+block cid
+    link(rel='stylesheet', href='/css/style.css')
+block content
+    div(class="d-flex justify-content-center")
+        .col-lg-6
+            .card
+                .card-body
+                    h3.card-title(class="d-flex justify-content-center" style="color:#6C7AE0") ส่งคำร้องเพิ่มชุมชน
+                    h4.card-title(class="d-flex justify-content-center" style="color:red") (สำหรับชุมชนที่ไม่มีรายชื่ออยู่ในระบบตอนสมัครชุมชนเท่านั้น !!)
+                    // Vertical Form
+                    form(class='form', action='/addCommunity', method='POST')
+                        .col-12
+                            h5 ชื่อชุมชน
+                            .wrap-input1.w-full.p-b-4
+                                input#communityShopName.form-control.input1.bg-none.plh1.stext-107.cl7(type='text', name='communityShopName',maxlength="146", placeholder='ชื่อชุมชน เช่น วิสาหกิจชุมชน..........' autofocus required=true)
+                                .focus-input1.trans-04
+                        br
+                        .col-12
+                            h5 รหัสทะเบียนชุมชน (ใส่ขีดด้วย)
+                            .wrap-input1.w-full.p-b-4
+                                input#communityShopName.form-control.input1.bg-none.plh1.stext-107.cl7(type='text', name='communityCode',maxlength="17", placeholder='รหัสทะเบียนชุมชน เช่น X-XX-XX-XX/X-XXXX (ใส่ขีดด้วย)' autofocus required=true)
+                                .focus-input1.trans-04
+                        br
+                        .col-12
+                            h5 จังหวัด  : 
+                            select.form-control.form-control-sm-2(name="Province" id="Province" onChange="ChooseProvince(this)" required=true)
+                                option(value="")|---เลือกจังหวัด---
+                                each province in provinces
+                                    option(value=province.provinces_id name="province")=province.provinces_name
+                        br
+                        .col-12
+                            h5 อำเภอ  : 
+                            select.form-control.form-control-sm-2(name="Amphure" class="Amphure" id="Amphure" onChange="ChooseAmphures(this)" required=true)
+                                option(value="")|---เลือกอำเภอ---
+                        br
+                        .col-12
+                            h5(for="Tambon") ตำบล  :
+                            select.form-control.form-control-sm-2(name="Tambon" class="Tambon" id="Tambon" onChange="ChooseTambon(this)"  required=true)
+                                option(value="")|---เลือกตำบล---
+                        br
+                        .col-12
+                            h5 รหัสไปรษณีย์ 
+                            input.form-control.form-control-sm-2(type="text" id="Zipcode" name="Zipcode" readonly required=true)
+                        //- br
+                        //- .col-12
+                        //-     h5 ชื่อจริง
+                        //-     input#F_name.form-control(type='text', name='F_name', placeholder='ชื่อจริง' required=true)
+                        //- br
+                        //- .col-12
+                        //-     h5 นามสกุล
+                        //-     input#L_name.form-control(type='text', name='L_name', placeholder='นามสกุลจริง' required=true)
+                        //- br
+                        //- .col-12
+                        //-     h5 เบอร์โทรศัพท์
+                        //-     input#peopleCommunityPhone.form-control(type='number', name='peopleCommunityPhone', placeholder='0XX-XXX-XXXX' required=true)
+                        //- br
+                        //- .col-12
+                        //-     h5 เลขบัญชีธนาคารของร้าน
+                        //-     input#bankNumber.form-control(type='number', name='bankNumber', placeholder='เลขบัญชีธนาคารของร้าน' required=true)
+                        //- br
+                        //- .col-12
+                        //-     h5 ชื่อธนาคาร
+                        //-     select.form-control.form-control-sm-2(name="bankName" aria-label="Default select example"  required=true) 
+                        //-         option(selected value='') ---เลือกธนาคาร---
+                        //-             option(value="ธนาคารไทยพาณิชย์") ธนาคารไทยพาณิชย์
+                        //-             option(value="ธนาคารกรุงเทพ") ธนาคารกรุงเทพ
+                        //-             option(value="ธนาคารแห่งประเทศไทย") ธนาคารแห่งประเทศไทย
+                        //-             option(value="ธนาคารกสิกรไทย") ธนาคารกสิกรไทย
+                        //-             option(value="ธนาคารกรุงไทย") ธนาคารกรุงไทย
+                        //- br
+                        //- .col-12
+                        //-     .form-group
+                        //-         h5 เลขบัตรประชาชน 13 หลัก 
+                        //-         h5(style="color:red") (ใช้เพื่อตรวจสอบเท่านั้น ไม่มีการเก็บเลขบัตรประชาชน)
+                        //-         input#cid.form-control(type='tel', name='cid', placeholder='X-XXXX-XXXXX-XX-X', autocomplete='off', title='National ID Input', aria-labelledby='InputLabel', aria-invalid='', aria-required='true', required=true, tabindex='1')
+                        //- #errorMessage.text.error(aria-hidden='true', aria-label='Invalid ID', role='alert')
+                        //-     p เลขบัตรประชาชนผิด หรือ ไม่ถูกต้อง กรุณากรอกเลขบัตรประชาชนใหม่อีกครั้ง
+                        //- #successMessage.text.success(aria-hidden='true', aria-label='Valid ID', role='alert')
+                        //-     p เลขบัตรประชาชนถูกต้อง
+                        //- .col-12
+                        //-     h5 อีเมล
+                        //-     input#email.form-control(type='email', name='email', placeholder='XXXXXX@gmail.com' required=true)
+                        hr.divider-w.mb-10
+                        button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit') ส่งคำร้อง
+                        label(style="color:red") ***เมื่อส่งคำร้องสำเร็จ ต้องรอการอนุมัติจากผู้ดูแลระบบ ทางเราจะรีบดำเนินการอนุมัติให้สำเร็จโดยเร็ว***
+                        hr.divider-w.mb-10
+                    a(href='/addCommunityStatus')
+                        button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer ดูคำร้อง
+    //- cid
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/imask/3.4.0/imask.min.js')
+    script(src='/vendor/jquery/jquery-3.2.1.min.js')
+    script(src='/js/script.js')
+    address
+    script.
+        function ChooseProvince(province){
+            fetch('addCommunity/'+province.value)
+            .then(res=> res.json())
+            .then(data =>{
+                const Amphure= document.getElementById("Amphure");
+                Amphure.innerHTML='<option value="">---เลือกอำเภอ---</option>';
+                const Tambon= document.getElementById("Tambon");
+                Tambon.innerHTML='<option value="">---เลือกตำบล---</option>';
+                data.forEach(value=>{
+                    var option=document.createElement('option');
+                    option.value=value.amphures_id
+                    option.text=value.amphures_name
+                    Amphure.appendChild(option);
+                })
+            });
+        }
+        function ChooseAmphures(Amphure){
+            var province=document.getElementById("Province").value;
+            fetch('addCommunity/'+province+'/'+Amphure.value)
+            .then(res=> res.json())
+            .then(data =>{
+                const Tambon= document.getElementById("Tambon");
+                Tambon.innerHTML='<option value="">---เลือกตำบล---</option>';
+                const ZipCode=document.getElementById("Zipcode");
+                ZipCode.value="";
+                data.forEach(value=>{
+                    var option=document.createElement('option');
+                    option.value=value.tambons_id
+                    option.text=value.tambons_name
+                    ZipCode.value=value.zip_code
+                    Tambon.appendChild(option);
+                })
+            });
+        }

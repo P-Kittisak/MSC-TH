@@ -1,0 +1,161 @@
+extends layout
+block content
+    -function formatMoney(inum){  // ฟังก์ชันสำหรับแปลงค่าตัวเลขให้อยู่ในรูปแบบ เงิน
+        -var s_inum=new String(inum);
+        -var num2=s_inum.split(".");
+        -var n_inum="";  
+        -if(num2[0]!=undefined){
+        -var l_inum=num2[0].length;  
+        -for(i=0;i<l_inum;i++){  
+            -if(parseInt(l_inum-i)%3==0){  
+                -if(i==0){  
+                    -n_inum+=s_inum.charAt(i);         
+                -}else{  
+                    -n_inum+=","+s_inum.charAt(i);         
+                -}     
+            -}else{  
+                -n_inum+=s_inum.charAt(i);  
+            -}  
+        -}  
+        -}else{
+            -n_inum=inum;
+        -}
+        -if(num2[1]!=undefined){
+            -n_inum+="."+num2[1];
+        -}
+        -return n_inum;
+    -}
+    //- แยกบล็อคตรงนี้ Product
+    section(class="bg0 m-t-23 p-b-140")
+        div(class="container")
+            .container
+                form.row(action="/search" method='GET')
+                    .col-md
+                        label ชื่อสินค้า
+                        input#product.form-control(type="search" placeholder="ค้นหาชื่อสินค้า" aria-label="Search" autocomplete="off"  name="product_Name" autofocus value=product_Name)
+                    .col-md
+                        label ชื่อชุมชน
+                        input#community.form-control(type="search" placeholder="ค้นหาชื่อชุมชน" aria-label="Search" autocomplete="off"  name="community_name" value=community_name)          
+                    .col-md
+                        label หมวดหมู่
+                        select.form-control#category(name="category" aria-label="Default select example") 
+                            option(selected value='') ---เลือกหมวดหมู่---
+                            -function loop(level) {
+                                -return function (a) {
+                                -var i = level
+                                -var s = ''
+                                -var j=0
+                                -var space ='\u00a0'
+                                -while (i--) {
+                                    -s+='\u00a0'+'\u00a0'
+                                    -j++
+                                -}
+                                -if (level) {
+                                    -s +='-'
+                                    -j
+                                -}
+                                if a.category_Name.length > 25
+                                    option(value=a.category_Id)=s+a.category_Name.substring(0,25)+"..."
+                                else 
+                                    option(value=a.category_Id)=s+a.category_Name
+                                -Array.isArray(a.subCate) && a.subCate.forEach(loop(level + 1));
+                                -}
+                            -}
+                            -var data = JSON.parse(categories)
+                            -data.forEach(loop(0));
+                    .col-md.justify-content-center
+                        label เรียงสินค้าตาม
+                        select.form-control#Sort(class="price-sorting type-regular" name="Sort")
+                            option(value="") ---ค่าตั้งต้น---
+                            option(value="ASC") ราคาน้อยไปมาก
+                            option(value="DESC") ราคามากไปน้อย 
+                    .col-md
+                        label="\u00a0"
+                        button.btn.btn-outline-dark.w-100(type='submit') ค้นหา
+            br
+            div(class="row products-grid" id="mycard")
+                each Product in product
+                    -var img = Product.productImage;
+                    div(class="product col-sm-6 col-md-4 col-lg-3 p-b-35" data-price=Product.product_Price)
+                        //- Block Product
+                        div(class="block2")
+                            div(class="block2-pic hov-img0")
+                                a(href="/cat/" + Product.category_Name + "/" + Product.product_Id + "/" + Product.product_Name)
+                                    img#img(width="200" height="200"  src="/images/product/" + img)
+                            div(class="block2-txt flex-w flex-t p-t-14")
+                                div(class="block2-txt-child1 flex-col-l")
+                                    if Product.product_Name.length > 25
+                                        a(href="/cat/" + Product.category_Name + "/" + Product.product_Id + "/" + Product.product_Name, class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6")
+                                            h5(style="color:#6c7ae0")=Product.product_Name.substring(0,25)+"..."
+                                    else 
+                                        a(href="/cat/" + Product.category_Name + "/" + Product.product_Id + "/" + Product.product_Name, class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6")
+                                            h5(style="color:#6c7ae0")=Product.product_Name
+                                    if Product.community_name.length > 25
+                                        a="ชุมชน : " + Product.community_name.substring(0,25)+"..."
+                                    else
+                                        a="ชุมชน : " + Product.community_name
+                                    if Product.community_Shop_Name.length > 25
+                                        a="ร้านค้า : " + Product.community_Shop_Name.substring(0,25)+"..."
+                                    else
+                                        a="ร้านค้า : " + Product.community_Shop_Name
+                                    if Product.category_Name.length > 20
+                                        a
+                                        a(name="category" href='/search/' + Product.category_Id + '/' + Product.category_Name   value=Product.category_Id)="หมวดหมู่ : " + Product.category_Name.substring(0,20)+"..."
+                                    else
+                                        a(name="category" href='/search/' + Product.category_Id + '/' + Product.category_Name   value=Product.category_Id)="หมวดหมู่ : " + Product.category_Name
+                                    br
+                                    h4(style="color:black")="฿" + formatMoney(Product.product_Price)
+                            br
+                            if(customer)
+                                if Product.product_Quantity < 1
+                                    div(class="container d-flex justify-content-center")
+                                        h4(style="color:red") สินค้าหมด
+                                else if(customer.user_status == 0)
+                                    div(class="container d-flex justify-content-center block2-txt-child2 flex-r p-t-3")
+                                        form(action='/cart/' + Product.product_Id + '/add', method='POST')
+                                            button.btn.btn-outline-dark.w-100(type='submit')
+                                                i(class="zmdi zmdi-shopping-cart" style="color:#6c7ae0" border-color="color:##fff")
+                                                    a=" เพิ่มสินค้าลงตะกร้า"
+    //- script(src='https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js')
+    script(src='/vendor/jquery/jquery-3.2.1.min.js')
+    //- script.
+    //-     $(document).ready(function() {
+    //-         $("#filter").on("keyup", function() {
+    //-             var value = $(this).val().toLowerCase();
+    //-             $("#mycard > div").filter(function() {
+    //-                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    //-             });
+    //-         });
+    //-     });
+    //-     $(document).on("change", ".price-sorting", function() {
+    //-         var sortingMethod = $(this).val();
+    //-         if(sortingMethod == 'l2h')
+    //-         {
+    //-             console.log("h");
+    //-             sortProductsPriceAscending();
+    //-         }
+    //-         else if(sortingMethod == 'h2l')
+    //-         {
+    //-             sortProductsPriceDescending();
+    //-         }
+    //-         else if(sortingMethod==''){
+    //-             reset();
+    //-         }
+    //-     });
+    //-     function sortProductsPriceAscending()
+    //-     {
+    //-         var products = $('.product');
+    //-         console.log(products);
+    //-         products.sort(function(a, b){ return $(a).data("price")-$(b).data("price")});
+    //-         $(".products-grid").html(products);
+    //-     }
+    //-     function sortProductsPriceDescending()
+    //-     {
+    //-         var products = $('.product');
+    //-         products.sort(function(a, b){ return $(b).data("price") - $(a).data("price")});
+    //-         $(".products-grid").html(products);
+
+    //-     }
+    //-     function reset(){
+    //-         $(".products-grid").html(keep);
+    //-     }

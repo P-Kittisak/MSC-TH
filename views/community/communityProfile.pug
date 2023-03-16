@@ -1,0 +1,124 @@
+extends layoutCommunity
+block navbarMain
+  li.menu-item
+    a.menu-link(href='/community/home')
+      i.menu-icon.tf-icons.bx.bx-home-circle
+      div(data-i18n='Analytics') หน้าหลัก
+block navProduct
+  li.menu-item
+    a.menu-link(href='/community/product')
+      i.menu-icon(class="bi bi-folder")
+      div(data-i18n='Without menu') สินค้าชุมชน
+block bank
+  block bank
+  li.menu-item
+    a.menu-link(href='/community/orderSummary')
+      i.menu-icon(class="bi bi-reception-4")
+      div(data-i18n='Without menu') รายรับของชุมชน
+      
+block community
+  li.menu-header.small.text-uppercase
+    h6(style="color:#696cff") ชุมชน
+  li.menu-item
+    a.menu-link.menu-toggle(href='javascript:void(0);')
+      i.menu-icon.tf-icons.bx.bx-dock-top
+      div(data-i18n='Account Settings') จัดการชุมชน
+    ul.menu-sub
+      li.menu-item
+        a.menu-link(href='/community/people')
+          div(data-i18n='Connections') คำขอเข้าร่วมเป็นร้านค้าชุมชน
+      li.menu-item
+        a.menu-link(href='/community/peopleCommunity')
+          div(data-i18n='Connections') สมาชิกชุมชน
+      li.menu-item
+        a.menu-link(href='/community/address')
+          div(data-i18n='Notifications') ที่อยู่ของชุมชน
+      
+block profileShop
+  li.menu-header.small.text-uppercase
+    h6(style="color:#696cff") บัญชีผู้ใช้งาน
+  li.menu-item.active
+    a.menu-link(href='/community/communityProfile')
+      i.menu-icon.tf-icons.bx.bx-user
+      div(data-i18n='Tables') โปรไฟล์
+//- end navbar
+block contentShop
+  section 
+    .container-xxl.flex-grow-1.container-p-y
+      h4.fw-bold.py-3.mb-4
+        | โปรไฟล์
+      .row
+        .col-md-12
+          ul.nav.nav-pills.flex-column.flex-md-row.mb-3
+            li.nav-item
+              a.nav-link.active(href='/community/communityProfile')
+                i.bx.bx-user.me-1
+                |  โปรไฟล์
+            li.nav-item
+              a.nav-link(href='/community/communityProfile/changePassword')
+                i.bx.bxs-edit
+                |  เปลี่ยนรหัสผ่าน
+          .card.mb-4
+            h3.card-header(style="color:#696cff") รายละเอียดโปรไฟล์
+            // Account
+            each profile in communityProfile
+              hr.my-0
+              .card-body
+                form#formAccountSettings(action="/community/communityProfile", method='POST')
+                  .row
+                    .mb-3.col-md-6
+                      h4(for='fullname') ชื่อ-นามสกุล(หัวหน้าชุมชน)
+                      div(class="input-group input-group-merge")
+                        span(id="basic-icon-default-fullname2" class="input-group-text")
+                          i(class="bx bx-user")
+                        input#fullname.form-control(type='text', name='fullname',maxlength="70", value=profile.fullname_user, autofocus required=true)
+                    .mb-3.col-md-6
+                      h4(for='communityName') ชื่อชุมชน (ไม่สามารถแก้ไขได้)
+                      input#communityName.form-control(type='text', name='communityName', value=profile.community_name readonly)
+                    .mb-3.col-md-6
+                      h4(for='email') อีเมล
+                        button.btn.btn-outline-primary(type='button', data-bs-toggle='modal', data-bs-target='#editEmail') แก้ไข
+                      input#email.form-control(type='text', name='email',maxlength="100", value=Community.email, placeholder='MSC.TH@gmail.com' required=true readonly)
+                    .mb-3.col-md-6
+                      h4(for='communityPhone') เบอร์โทรศัพท์ชุมชน
+                        button.btn.btn-outline-while(type='button' disabled) .
+                      div(class="input-group input-group-merge")
+                        span(id="basic-icon-default-fullname2" class="input-group-text")
+                          i(class="bx bx-phone")
+                        input#communityPhone.form-control(type='tel', name='communityPhone',pattern="[0-9]{10}" title="กรุณาใส่หมายเลข 0123456789" value=profile.phone required=true)
+                    if CheckedEmail
+                      if(checkOutNoti != '')
+                        div(class="container d-flex justify-content-center")
+                          h3(class="alert-dismissible fade show" role="alert" style="color:red")=CheckedEmail
+                      else
+                        div(class="container d-flex justify-content-center")
+                          h3(class="alert-dismissible fade show" role="alert" style="color:red")=checkOutNoti
+                    else if CheckPassword
+                      div(class="container d-flex justify-content-center")
+                        h3(class="alert-dismissible fade show" role="alert" style="color:red")=CheckPassword
+                  .d-grid.gap-2.col-lg-6.mx-auto
+                    button.btn.btn-primary.btn-lg(type='submit') บันทึกการเปลี่ยนแปลง
+              // Modal edit email
+              form.dev-form(class="container d-flex justify-content-center", action='/community/communityProfile/'+ Community.username + '/' + Community.password.substring(3,8) + '/editEmail', method='POST')
+                .modal.fade(id="editEmail", tabindex='-1', aria-hidden='true')
+                  .modal-dialog.modal-dialog-centered(role='document')
+                    .modal-content
+                      .modal-header
+                        h2#editEmailTitle.modal-title(style="color:#696cff") แก้ไขอีเมล
+                        button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+                      .modal-body
+                        .row
+                          .col.mb-3
+                            h5(for='nameWithTitle') ชื่ออีเมลใหม่
+                            input#email.form-control(name='email',maxlength="100", type='text', placeholder='อีเมลใหม่', value=Community.email)
+                            br
+                            h5(for='nameWithTitle') รหัสผ่าน (เพื่อยืนยันตัวตน)
+                            .mb-3.form-password-toggle
+                              .input-group.input-group-merge
+                                input#password.form-control(type='password',minlength="8" maxlength="12" name='password', title="รหัสผ่านต้องมีอักขระอย่างน้อย 8 ตัว" placeholder='············' required=true)
+                                span.input-group-text.cursor-pointer
+                                  i.bx.bx-hide
+                              label(style="color:red") ***รหัสผ่านต้องมีอักษรหรือตัวเลขอย่างน้อย 8 ตัวแต่ไม่เกิน 12 ตัว***
+                      .modal-footer
+                        button.btn.btn-danger(type='button', data-bs-dismiss='modal') ปิด
+                        button.btn.btn-primary(type='submit') ยืนยันการเปลี่ยนแปลง

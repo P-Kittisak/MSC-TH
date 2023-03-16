@@ -1,0 +1,86 @@
+extends layoutCommunity
+block navbarMain
+  li.menu-item
+    a.menu-link(href='/community/home')
+      i.menu-icon.tf-icons.bx.bx-home-circle
+      div(data-i18n='Analytics') หน้าหลัก
+block navProduct
+  li.menu-item
+    a.menu-link(href='/community/product')
+      i.menu-icon(class="bi bi-folder")
+      div(data-i18n='Without menu') สินค้าชุมชน
+block bank
+  block bank
+  li.menu-item
+    a.menu-link(href='/community/orderSummary')
+      i.menu-icon(class="bi bi-reception-4")
+      div(data-i18n='Without menu') รายรับของชุมชน
+      
+block community
+  li.menu-header.small.text-uppercase
+    h6(style="color:#696cff") ชุมชน
+  li.menu-item.active.open
+    a.menu-link.menu-toggle(href='javascript:void(0);')
+      i.menu-icon.tf-icons.bx.bx-dock-top
+      div(data-i18n='Account Settings') จัดการชุมชน
+    ul.menu-sub
+      li.menu-item
+        a.menu-link(href='/community/people')
+          div(data-i18n='Connections') คำขอเข้าร่วมเป็นร้านค้าชุมชน
+      li.menu-item
+        a.menu-link(href='/community/peopleCommunity')
+          div(data-i18n='Connections') สมาชิกชุมชน
+      li.menu-item.active
+        a.menu-link(href='/community/address')
+          div(data-i18n='Notifications') ที่อยู่ของชุมชน
+      
+block profileShop
+  li.menu-header.small.text-uppercase
+    h6(style="color:#696cff") บัญชีผู้ใช้งาน
+  li.menu-item
+    a.menu-link(href='/community/communityProfile')
+      i.menu-icon.tf-icons.bx.bx-user
+      div(data-i18n='Tables') โปรไฟล์
+//- end navbar
+block contentShop
+  section 
+    .container-xxl.flex-grow-1.container-p-y
+      h4.fw-bold.py-3.mb-4
+        span.text-muted.fw-light จัดการชุมชน /
+        |  ที่อยู่ชุมชน
+      each address in addressCommunity
+        .row
+          .col-md-12
+            .card.mb-4
+              h2.card-header(style="color:#696cff") ที่อยู่ชุมชน
+              h5|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                = address.community_name
+              h5|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                = address.address
+              h5|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                = address.amphures_name + " " + address.tambons_name
+              h5|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                = address.provinces_name + " " + address.zip_code
+              h5|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                = "เบอร์โทร : " + address.phone
+          .col-md-12
+            .card.mb-4
+              h2.card-header(style="color:#696cff") แก้ไขที่อยู่ชุมชน
+              .card-body.demo-vertical-spacing.demo-only-element
+                form(action="/community/address", method="POST")
+                  .input-group
+                    h5 ที่อยู่ชุมชน
+                    .input-group
+                      input.form-control(name='addressCommunity', type='text', placeholder='ที่อยู่ชุมชน', aria-label='productName', aria-describedby='basic-addon11',value=address.address autofocus required=true)
+                  br
+                  .input-group
+                    h5 เบอร์โทรศัพท์ชุมชน
+                    .input-group
+                      input.form-control(name='communityPhone', type='tel', placeholder='XXX-XXX-XXXX',pattern="[0-9]{10}",title="กรุณาใส่หมายเลข 0123456789" aria-label='people_Community_Phone', aria-describedby='basic-addon11',value=address.phone required=true)
+                  //- .input-group
+                  //-   h5 เลขบัญชีธนาคาร
+                  //-   .input-group
+                  //-     input.form-control(name='bank_Number', type='number', placeholder='เลขบัญชีธนาคาร', aria-label='bank_Number', aria-describedby='basic-addon11' required=true)
+                  br
+                  .d-grid.gap-2.col-lg-6.mx-auto
+                    button.btn.btn-primary.btn-lg(type='submit') แก้ไขที่อยู่ชุมชน

@@ -1,0 +1,333 @@
+extends layoutCommunity
+block navbarMain
+  li.menu-item.active
+    a.menu-link(href='/community/home')
+      i.menu-icon.tf-icons.bx.bx-home-circle
+      div(data-i18n='Analytics') หน้าหลัก
+block navProduct
+  li.menu-item
+    a.menu-link(href='/community/product')
+      i.menu-icon(class="bi bi-folder")
+      div(data-i18n='Without menu') สินค้าชุมชน
+block bank
+  li.menu-item
+    a.menu-link(href='/community/orderSummary')
+      i.menu-icon(class="bi bi-reception-4")
+      div(data-i18n='Without menu') รายรับของชุมชน
+block community
+  li.menu-header.small.text-uppercase
+    h6(style="color:#696cff") ชุมชน
+  li.menu-item
+    a.menu-link.menu-toggle(href='javascript:void(0);')
+      i.menu-icon.tf-icons.bx.bx-dock-top
+      div(data-i18n='Account Settings') จัดการชุมชน
+    ul.menu-sub
+      li.menu-item
+        a.menu-link(href='/community/people')
+          div(data-i18n='Connections') คำขอเข้าร่วมเป็นร้านค้าชุมชน
+      li.menu-item
+        a.menu-link(href='/community/peopleCommunity')
+          div(data-i18n='Connections') สมาชิกชุมชน
+      li.menu-item
+        a.menu-link(href='/community/address')
+          div(data-i18n='Notifications') ที่อยู่ของชุมชน
+block profileShop
+  li.menu-header.small.text-uppercase
+    h6(style="color:#696cff") บัญชีผู้ใช้งาน
+  li.menu-item
+    a.menu-link(href='/community/communityProfile')
+      i.menu-icon.tf-icons.bx.bx-user
+      div(data-i18n='Tables') โปรไฟล์
+//- end navbar
+block contentShop
+  section
+    -var total = 0;
+    -var totalQuantity = 0;
+    .container-xxl.flex-grow-1.container-p-y
+      h4.fw-bold.py-3.mb-4
+        span.text-muted.fw-light
+        | หน้าหลัก
+      .card
+        .tab-content
+          .mb-2.row
+            form.dev-form(class="form" action='/community/orderSummary/searchOrder', method='POST')
+              .col-md-7
+                h2.card-header(style="color:#696cff") สรุปยอดขายสินค้า
+                .card-body.demo-vertical-spacing.demo-only-element
+                  .row
+                    .mb-1.col-md-5
+                      label เดือนเริ่มต้นจะค้นหา
+                      .input-group
+                        input#timeStart.form-control(type='month',name="timeStart" autofocus required=true)
+                    .mb-4.col-md-5
+                      label เดือนที่สิ้นสุด
+                      .input-group
+                        input#timeEnd.form-control(type='month',name="timeEnd" required=true)
+                        button.btn.btn-outline-primary(type='submit') ค้นหา
+                    .mb-1.col-md-5
+                      label ชื่อร้านค้า
+                      .input-group
+                        input#timeEnd.form-control(type='text',name="communityShopName" placeholder='กรอกชื่อร้านค้าที่ต้องการค้นหา' value='')
+                        //- button.btn.btn-outline-success(type='submit') ค้นหา
+                    .mb-1.col-md-7
+                      label ชื่อสินค้า
+                      .input-group
+                        input#timeEnd.form-control(type='text',name="productName" placeholder='กรอกชื่อสินค้าที่ต้องการค้นหา' value='')
+                        button.btn.btn-outline-primary(type='submit') ค้นหา
+          .table-responsive.text-nowrap
+            table#orderSummaryTableTotal(class="table table-bordered")
+              thead
+                tr.text-nowrap
+                  th.text-center(scope='col' style="color:#696cff") ลำดับ
+                  th.text-center(scope='col' style="color:#696cff") ชื่อร้านค้า
+                  th.text-center(scope='col' style="color:#696cff") ชื่อสินค้า
+                  th.text-center(scope='col' style="color:#696cff") จำนวนสินค้า
+                  th.text-center(scope='col' style="color:#696cff") ยอดรวม
+              tbody.table-border-bottom-0
+                each OrderSummary,index in orderSummary
+                  tr 
+                    -total += OrderSummary.TotalPrice
+                    td.text-center(style="width:14%")
+                      i.fab.fa-angular.fa-lg.text-danger.me-3
+                      |  
+                      strong=index+1
+                    td=OrderSummary.community_Shop_Name
+                    td=OrderSummary.product_Name
+                    td.text-center=OrderSummary.TotalQuantity
+                    td.text-center=OrderSummary.TotalPrice
+              tfoot
+                tr
+                  th
+                  th ยอดรวม
+                  th 
+                  th.text-center
+                  th.text-center
+      #chart
+  script(src="/shop/assets/js/jquery.dataTables.min.js")
+  script(src="https://cdn.datatables.net/plug-ins/1.12.1/api/sum().js")
+  script(src="/shop/assets/js/dataTables.bootstrap5.min.js")
+  script(src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js")
+  script(src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.bootstrap5.min.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js")
+  script(src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js")
+  script(src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js")
+  script(src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.colVis.min.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js")
+  script(src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js")
+  script(src="https://code.highcharts.com/highcharts.js")
+  script(src="https://code.highcharts.com/modules/no-data-to-display.js")
+  script(src="https://code.highcharts.com/modules/series-label.js")
+  script(src="https://code.highcharts.com/modules/exporting.js")
+  script(src="https://code.highcharts.com/modules/export-data.js")
+  script(src="https://code.highcharts.com/modules/accessibility.js")
+  script.
+      function formatMoney(inum){  // ฟังก์ชันสำหรับแปลงค่าตัวเลขให้อยู่ในรูปแบบ เงิน
+        var s_inum=new String(inum);
+        var num2=s_inum.split(".");
+        var n_inum="";  
+        if(num2[0]!=undefined){
+        var l_inum=num2[0].length;  
+        for(i=0;i<l_inum;i++){  
+            if(parseInt(l_inum-i)%3==0){  
+                if(i==0){  
+                    n_inum+=s_inum.charAt(i);         
+                }else{  
+                    n_inum+=","+s_inum.charAt(i);         
+                }     
+            }else{  
+                n_inum+=s_inum.charAt(i);  
+            }  
+        }  
+        }else{
+            n_inum=inum;
+        }
+        if(num2[1]!=undefined){
+            n_inum+="."+num2[1];
+        }
+        return n_inum;
+      }
+      var table=$('#orderSummaryTableTotal').DataTable({
+      "language": {
+      url:'/shop/assets/json/th.json'
+      },
+      "DisplayLength" : 10 , 
+      "scrollY":        "1000px",
+      "scrollCollapse": true,
+      "paging": true,
+      "footer":false,
+      "order": [],
+      "footerCallback": function(row, data, start, end, display) {
+      var api = this.api(),
+        data;
+
+      // Remove the formatting to get integer data for summation
+      var intVal = function(i) {
+        return typeof i === 'string' ?
+          i.replace(/[\$,]/g, '') * 1 :
+          typeof i === 'number' ?
+          i : 0;
+      };
+
+      // Total over all pages
+      total = api
+        .column(3)
+        .data()
+        .reduce(function(a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+      total1 = api
+        .column(4)
+        .data()
+        .reduce(function(a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);
+
+      // Total over this page
+      /*pageTotal = api
+        .column(3, {
+          page: 'current'
+        })
+        .data()
+        .reduce(function(a, b) {
+          return intVal(a) + intVal(b);
+        }, 0);*/
+
+      // Update footer
+      $(api.column(3).footer()).html(
+          formatMoney(total)
+      );
+      $(api.column(4).footer()).html(
+          formatMoney(parseFloat(total1).toFixed(2))
+      );
+    },
+    dom: 'Bfrtip',
+      buttons: [
+          { extend: 'copyHtml5', footer: true },
+          { extend: 'excelHtml5', footer: true },
+          { extend: 'csvHtml5', footer: true },
+          { extend: 'pdfHtml5', footer: true }
+      ]
+      
+    });
+    let draw = false;
+
+      init();
+
+      /**
+      * FUNCTIONS
+      */
+
+      function init() {
+        // initialize DataTables
+        // get table data
+        const tableData = getTableData(table);
+        // create Highcharts
+        createHighcharts(tableData);
+        // table events
+        setTableEvents(table);
+      }
+
+      function getTableData(table) {
+        const dataArray = [],
+          countryArray = [],
+          populationArray = [],
+          densityArray = [];
+
+        // loop table rows
+        table.rows({ search: "applied" }).every(function() {
+          const data = this.data();
+          //- console.log(data[1]);
+          countryArray.push(data[1]);
+          populationArray.push(parseInt(data[3].replace(/\,/g, "")));
+          densityArray.push(parseFloat(data[4].replace(/\,/g, "")));
+        });
+
+        // store all data in dataArray
+        dataArray.push(countryArray, populationArray, densityArray);
+
+        return dataArray;
+      }
+
+      function createHighcharts(data) {
+        Highcharts.setOptions({
+          lang: {
+            thousandsSep: ","
+          }
+        });
+
+        Highcharts.chart("chart", {
+          title: {
+            text: "สรุปยอดขาย"
+          },
+          subtitle: {
+            text: "ข้อมูลยอดขายสินค้าตามวัน/เดือน/ปีที่ค้นหา"
+          },
+          xAxis: [
+            {
+              categories: data[0],
+              labels: {
+                rotation: -45
+              }
+            }
+          ],
+          yAxis: [
+            {
+              // first yaxis
+              title: {
+                text: "จำนวนสินค้า"
+              }
+            },
+            
+          ],
+          series: [
+            {
+              name: "จำนวนสินค้า",
+              color: "#0b2e7a",
+              type: "column",
+              data: data[1],
+              tooltip: {
+                valueSuffix: " ชิ้น"
+              },
+              dataLabels: {
+                enabled: true
+              }
+            },
+            
+          ],
+          tooltip: {
+            shared: true
+          },
+          legend: {
+            backgroundColor: "#FFF",
+            shadow: true
+
+          },
+          credits: {
+            enabled: false
+          },
+          noData: {
+            style: {
+              fontSize: "16px",
+            }
+          }
+        });
+      }
+
+      function setTableEvents(table) {
+        // listen for page clicks
+        table.on("page", () => {
+          draw = true;
+        });
+
+        // listen for updates and adjust the chart accordingly
+        table.on("draw", () => {
+          if (draw) {
+            draw = false;
+          } else {
+            const tableData = getTableData(table);
+            createHighcharts(tableData);
+          }
+        });
+      }

@@ -1,0 +1,61 @@
+extends info
+block content
+  br
+  div(class="container d-flex justify-content-center")
+    h2.font-alt(style="color:#6C7AE0") ที่อยู่
+  if address != ''
+    p(class="alert alert-danger alert-dismissible fade show" role="alert" style="color:red")=address
+    //- p(class="alert-danger alert-dismissible fade show" role="alert" style="color:red")=address
+  br
+  if addresses.length === 0
+    p(class="alert alert-danger alert-dismissible fade show" role="alert" style="color:red") คุณยังไม่มีที่อยู่
+  else
+    .div(class="container d-flex justify-content-center")
+      .row(class="container d-flex justify-content-center")
+        //- .col-sm-4.col-sm-offset-1.mb-sm-40
+        each Address in addresses
+          .col-sm-auto
+            .card
+              .card-body
+                .table-responsive
+                  table
+                    tbody
+                      tr
+                        td
+                        td(class="font-weight-bold")=Address.fullname
+                      tr 
+                        td 
+                        td=Address.address + " "
+                      tr 
+                        td 
+                        td=Address.amphures_name + " " + Address.tambons_name
+                      tr 
+                        td 
+                        td=Address.provinces_name + " " + Address.zip_code
+                      tr 
+                        td 
+                        td="โทร." + Address.phone
+                  div(class="container d-flex justify-content-center")
+                    form.dev-form(action='/Account/user' + '/address/' + Address.address_Id + '/editAddress', method='GET')
+                      button.size-121(type='submit', value='confirm', tabindex='2', aria-label='Submit')
+                        i.fa.fa-edit
+                        =' แก้ไขที่อยู่'
+                    form.dev-form(action='/Account/user' +  '/address/' + Address.address_Id + '/Deleteaddress', method='POST')
+                      button.size-121(class='btn btn-danger', style='background-color: red' type='submit')
+                        i.ri-delete-bin-5-line 
+                        =' ลบที่อยู่'
+  form.dev-form(action='/Account/user' +  '/address/addAddress' , method='GET')
+    button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit')
+      i.fa.fa-edit
+      = ' เพิ่มที่อยู่'
+  form.dev-form(action='/Account/user' +  '/edit', method='GET')
+    button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit')
+      i.fa.fa-edit
+      = ' แก้ไขข้อมูลส่วนตัว'
+  form.dev-form(action='/Account/user/', method='GET')
+    button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit')
+      i.fa.fa-home
+      = ' ข้อมูลส่วนตัว'
+  hr.divider-w.mb-10
+  //- script(src='https://cdnjs.cloudflare.com/ajax/libs/imask/3.4.0/imask.min.js')
+  //- script(src='../../js/script.js')

@@ -1,0 +1,57 @@
+extends info
+block content
+    div(class="d-flex justify-content-center")
+        .col-lg-6
+            .card
+                .card-body
+                    hr.divider-w.mb-10
+                    div(class="d-flex justify-content-center")
+                        h3.font-alt(style="color:#6C7AE0") แก้ไขข้อมูลส่วนตัว
+                    hr.divider-w.mb-10
+                    form(class='form', id='edit', action='/Account/user' + '/edit', method='POST')
+                        .form-group
+                            label ชื่อ-นามสกุล
+                            input#fullname.form-control(type='text', name='fullname', placeholder='ชื่อ-นามสกุล', value=customer.fullname_user,autofocus required=true)
+                        hr.divider-w.mb-10
+                        button#button.flex-c-m.stext-101.cl0.size-121.bg1.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit') แก้ไขชื่อ-นามสกุล
+                        hr.divider-w.mb-10
+            br
+            .card
+                .card-body
+                    hr.divider-w.mb-10
+                    div(class="d-flex justify-content-center")
+                        h3.font-alt(style="color:#6C7AE0") แก้ไขอีเมล
+                    hr.divider-w.mb-10
+                    form(class='form', id='edit', action='/Account/user' + '/editEmail', method='POST')
+                        .form-group
+                            label อีเมลใหม่
+                            input#email.form-control(type='email', name='email',maxlength="100", placeholder='อีเมลใหม่', value=customer.email required=true)
+                        .form-group
+                            label รหัสผ่าน
+                            input#password.form-control(type='password',minlength="8" maxlength="12" name='password', title="รหัสผ่านต้องมีอักขระอย่างน้อย 8 ตัว" placeholder='············' required=true)
+                            label(style="color:red") ***รหัสผ่านต้องมีอักษรหรือตัวเลขอย่างน้อย 8 ตัวแต่ไม่เกิน 12 ตัว***
+                        if CheckedEmail
+                            if(checkOutNoti != '')
+                                p(class="alert alert-danger alert-dismissible fade show" role="alert")=CheckedEmail
+                            else
+                                p(class="alert alert-danger alert-dismissible fade show" role="alert")=checkOutNoti
+                        else if CheckPassword
+                            p(class="alert alert-danger alert-dismissible fade show" role="alert")=CheckPassword
+                        hr.divider-w.mb-10
+                        button#button.flex-c-m.stext-101.cl0.size-121.bg1.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit') แก้ไขอีเมล
+                        hr.divider-w.mb-10
+    div(class="container") 
+        form.dev-form(action='/Account/user/', method='GET')
+            button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit')
+                i.fa.fa-home
+                = ' ข้อมูลส่วนตัว'
+        form.dev-form(action='/Account/user' + '/changePassword', method='GET')
+            button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit')
+                i.fa.fa-key
+                = ' เปลี่ยนรหัสผ่าน'
+        form.dev-form(action='/Account/user' + '/address', method='GET')
+            button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit')
+                i.fa.fa-edit
+                = ' ที่อยู่'
+    //- script(src='https://cdnjs.cloudflare.com/ajax/libs/imask/3.4.0/imask.min.js')
+    //- script(src='/js/script.js')

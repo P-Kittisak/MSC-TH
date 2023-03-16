@@ -1,0 +1,127 @@
+extends layoutCommunity
+block navbarMain
+  li.menu-item
+    a.menu-link(href='/community/home')
+      i.menu-icon.tf-icons.bx.bx-home-circle
+      div(data-i18n='Analytics') หน้าหลัก
+block navProduct
+  li.menu-item.active
+    a.menu-link(href='/community/product')
+      i.menu-icon(class="bi bi-folder")
+      div(data-i18n='Without menu') สินค้าชุมชน
+block bank
+  block bank
+  li.menu-item
+    a.menu-link(href='/community/orderSummary')
+      i.menu-icon(class="bi bi-reception-4")
+      div(data-i18n='Without menu') รายรับของชุมชน
+      
+block community
+  li.menu-header.small.text-uppercase
+    h6(style="color:#696cff") ชุมชน
+  li.menu-item
+    a.menu-link.menu-toggle(href='javascript:void(0);')
+      i.menu-icon.tf-icons.bx.bx-dock-top
+      div(data-i18n='Account Settings') จัดการชุมชน
+    ul.menu-sub
+      li.menu-item
+        a.menu-link(href='/community/people')
+          div(data-i18n='Connections') คำขอเข้าร่วมเป็นร้านค้าชุมชน
+      li.menu-item
+        a.menu-link(href='/community/peopleCommunity')
+          div(data-i18n='Connections') สมาชิกชุมชน
+      li.menu-item
+        a.menu-link(href='/community/address')
+          div(data-i18n='Notifications') ที่อยู่ของชุมชน
+      
+block profileShop
+  li.menu-header.small.text-uppercase
+    h6(style="color:#696cff") บัญชีผู้ใช้งาน
+  li.menu-item
+    a.menu-link(href='/community/communityProfile')
+      i.menu-icon.tf-icons.bx.bx-user
+      div(data-i18n='Tables') โปรไฟล์
+//- end navbar
+block contentShop
+  section
+    .container-xxl.flex-grow-1.container-p-y
+      h4.fw-bold.py-3.mb-4
+        span.text-muted.fw-light สินค้าชุมชน /
+        |  สินค้าชุมชน
+      .card
+        .card-body.pt-3
+          .table-responsive.text-nowrap
+            table#product.table
+              thead
+                tr
+                  th.text-center(scope='col' style="color:#696cff") รูปภาพ
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") ชื่อสินค้า
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") ชื่อร้านค้า
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") ราคา
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") จำนวน
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") หมวดหมู่
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") สถานะ
+              tbody.table-border-bottom-0
+                each communityProduct in product
+                  tr
+                    td.text-center
+                      a(href="/images/product/" + communityProduct.productImage target="_blank")
+                        img(width="100" height="100" src='/images/product/' + communityProduct.productImage  alt="IMG-PRODUCT")
+                    if(communityProduct.product_Status == 0)
+                      if(communityProduct.product_Status_Quantity >= communityProduct.product_Quantity)
+                        td.text-center
+                          i.fab.fa-angular.fa-lg.text-danger.me-3
+                          |  
+                          strong(style="color:red")=communityProduct.product_Name.substring(0,15)+"..."
+                        td.text-center(style="color:red")=communityProduct.community_Shop_Name.substring(0,15)+"..."
+                        td.text-center(style="color:red")=communityProduct.product_Price
+                        td.text-center(style="color:red")=communityProduct.product_Quantity
+                        td.text-center(style="color:red")=communityProduct.category_Name.substring(0,15)+"..."
+                        if(communityProduct.product_Quantity == 0)
+                          td.text-center
+                            span(class="badge bg-danger") สินค้าหมดแล้ว
+                        else
+                          td.text-center
+                            span(class="badge bg-danger") สินค้าใกล้จะหมด
+                      else
+                        td.text-center
+                          i.fab.fa-angular.fa-lg.text-danger.me-3
+                          |  
+                          strong=communityProduct.product_Name.substring(0,15)+"..."
+                        td.text-center=communityProduct.community_Shop_Name.substring(0,15)+"..."
+                        td.text-center=communityProduct.product_Price
+                        td.text-center=communityProduct.product_Quantity
+                        td.text-center=communityProduct.category_Name.substring(0,15)+"..."
+                        td.text-center
+                          span(class="badge bg-success") ใช้งานอยู่
+                    else if(communityProduct.product_Status != 0)
+                      td.text-center
+                        i.fab.fa-angular.fa-lg.text-danger.me-3
+                        |  
+                        strong=communityProduct.product_Name.substring(0,15)+"..."
+                      td.text-center=communityProduct.community_Shop_Name.substring(0,15)+"..."
+                      td.text-center=communityProduct.product_Price
+                      td.text-center=communityProduct.product_Quantity
+                      td.text-center=communityProduct.category_Name.substring(0,15)+"..."
+                      td.text-center
+                        span(class="badge bg-danger") ยกเลิก
+  script(src='/shop/assets/js/jquery.dataTables.min.js')
+  script(src='/shop/assets/js/dataTables.bootstrap5.min.js')
+  script.
+    $(document).ready( function (){
+      $('#product').DataTable({
+        "language": {
+          url:'/shop/assets/json/th.json'
+        },
+        "aLengthMenu": [[10, 20 , 100, 200, 500, 1000, -1], [10, 20, 100, 200, 500, 1000, "ทั้งหมด"]],
+        "iDisplayLength": 20,
+        "DisplayLength" : 20,
+        // "scrollY": "1000px",
+        "scrollCollapse": true,
+        "paging": true,
+        "footer":false,
+        "order": [],
+        //- dom: <"wrapper"flipt>,
+      }); 
+    });
+    

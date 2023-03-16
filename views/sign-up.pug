@@ -1,0 +1,129 @@
+html.light-style.customizer-hide(lang='th', dir='ltr', data-theme='theme-default', data-assets-path='/shop/assets/', data-template='vertical-menu-template-free')
+  head
+    meta(name='viewport', content='width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
+    title= title + ' | MSC TH'
+    meta(charset='UTF-8')
+    meta(name='description', content='')
+    style.
+      @import url('/fonts/font-awesome-4.7.0/fonts/Kanit.css');
+      body{
+        font-family: 'Kanit', sans-serif !important;
+      }
+    // Icons. Uncomment required icon fonts
+    link(rel='stylesheet', href='/shop/assets/vendor/fonts/boxicons.css')
+    link(rel='icon' type='image/png' href='/images/icons/Logo-msc-mini.png')
+    // Core CSS
+    link.template-customizer-core-css(rel='stylesheet', href='/shop/assets/vendor/css/core.css')
+    link.template-customizer-theme-css(rel='stylesheet', href='/shop/assets/vendor/css/theme-default.css')
+    link(rel='stylesheet', href='/shop/assets/css/demo.css')
+    // Vendors CSS
+    link(rel='stylesheet', href='/shop/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')
+    // Page CSS
+    // Page
+    link(rel='stylesheet', href='/shop/assets/vendor/css/pages/page-auth.css')
+    // Helpers
+    script(src='/shop/assets/vendor/js/helpers.js')
+    // ! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section
+    // ? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.
+    script(src='/shop//assets/js/config.js')
+    //- cid
+    link(rel='stylesheet', href='/css/style.css')
+  body
+    // Content
+    .container-xxl
+      .authentication-wrapper.authentication-basic.container-p-y
+        .authentication-inner
+          // Register
+          .card
+            .card-body
+              // Logo
+              .app-brand.justify-content-center
+                a.app-brand-link.gap-2(href='/')
+                  img(src='/images/icons/Logo-msc.png' alt='IMG-LOGO')
+              // /Logo
+              div(class="container d-flex justify-content-center")
+                h3.mb-2(style="color:#696cff") สมัครสมาชิก
+              form#formAuthentication.mb-3(class='form', action='/sign-up', method='POST')
+                .mb-3
+                  h5(for='username') ชื่อบัญชีผู้ใช้
+                  div(class="input-group input-group-merge")
+                    span(id="basic-icon-default-fullname2" class="input-group-text")
+                      i(class="bx bx-user")
+                    input#username.form-control(type='text', name='username',maxlength="40", placeholder='ชื่อบัญชีผู้ใช้' autofocus required=true)
+                .mb-3.form-password-toggle
+                  h5(for='password') รหัสผ่าน
+                  div(class="input-group input-group-merge")
+                    span(id="basic-icon-default-fullname2" class="input-group-text")
+                      i(class="bx bxs-key")
+                    input#password.form-control(type='password',minlength="8" maxlength="12" name='password', title="รหัสผ่านต้องมีอักขระอย่างน้อย 8 ตัว" placeholder='············' required=true)
+                    span.input-group-text.cursor-pointer
+                      i.bx.bx-hide
+                    label(style="font-size:0.8rem;color:red;") ***รหัสผ่านต้องมีอักษรหรือตัวเลขอย่างน้อย 8 ตัวแต่ไม่เกิน 12 ตัว***
+                .mb-3.form-password-toggle
+                  h5(for='password') รหัสผ่านอีกครั้ง
+                  div(class="input-group input-group-merge")
+                    span(id="basic-icon-default-fullname2" class="input-group-text")
+                      i(class="bx bxs-key")
+                    input#password2.form-control(type='password',minlength="8" maxlength="12" name='rePassword', title="รหัสผ่านต้องมีอักขระอย่างน้อย 8 ตัว" placeholder='············' required=true)
+                    span.input-group-text.cursor-pointer
+                      i.bx.bx-hide
+                    label(style="font-size:0.8rem;color:red;") ***รหัสผ่านต้องมีอักษรหรือตัวเลขอย่างน้อย 8 ตัวแต่ไม่เกิน 12 ตัว***
+                .mb-3
+                  h5(for='name') ชื่อ-นามสกุล
+                  div(class="input-group input-group-merge")
+                    span(class="input-group-text")
+                      i(class="bx bx-group bx-rotate-90 bx-tada bx-flip-none")
+                    input#fullname.form-control(type='text', name='fullname',maxlength="70", placeholder='ชื่อ-นามสกุล' required=true)
+                //- .mb-3
+                //-   h5(for='cid') เลขบัตรประชาชน 13 หลัก
+                //-   h7(style="color:red") (ใช้เพื่อตรวจสอบเท่านั้น ไม่มีการเก็บเลขบัตรประชาชน)
+                //-   input#cid.form-control(type='tel', name='cid', placeholder='X-XXXX-XXXXX-XX-X', autocomplete='off', title='National ID Input', aria-labelledby='InputLabel', aria-invalid='', aria-required='true', required=true, tabindex='1')
+                //- #errorMessage.text.error(aria-hidden='true', aria-label='Invalid ID', role='alert')
+                //-   p เลขบัตรประชาชนผิด 
+                //-   p หรือ 
+                //-   p ไม่ถูกต้อง กรุณากรอกเลขบัตรประชาชนใหม่อีกครั้ง
+                //- #successMessage.text.success(aria-hidden='true', aria-label='Valid ID', role='alert')
+                //-   p เลขบัตรประชาชนถูกต้อง
+                .mb-3
+                  h5(for='email') อีเมล
+                  div(class="input-group input-group-merge")
+                    span(class="input-group-text")
+                      i(class="bx bx-envelope")
+                    input#email.form-control(type='email', name='email',maxlength="100" placeholder='อีเมล เช่น XXXXX@gmail.com' required=true)
+                .mb-3
+                  if checkOutNoti
+                    if (signUpError != '')
+                      p(class="alert-dismissible fade show" role="alert" style="color:red")=signUpError
+                    else
+                      p(class="alert-dismissible fade show" role="alert" style="color:red")=checkOutNoti
+                  else
+                    if (signUpError != '')
+                      p(class="alert-dismissible fade show" role="alert" style="color:red")=signUpError
+                .mb-3
+                  button#button.btn.btn-primary.d-grid.w-100(type='submit', value='confirm', tabindex='2', aria-label='Submit') สมัครสมาชิก
+              p.text-center
+                span คุณมีบัญชีแล้วเหรอ ? 
+                a(href="/login")
+                  span เข้าสู่ระบบที่นี่
+              p.text-center
+                span สมัครชุมชนกับ MSC TH
+                a(href="/sign-up-community")
+                  span ที่นี่
+          // /Register
+    // Core JS
+    // build:js assets/vendor/js/core.js
+    script(src='/shop/assets/vendor/libs/jquery/jquery.js')
+    script(src='/shop/assets/vendor/libs/popper/popper.js')
+    script(src='/shop/assets/vendor/js/bootstrap.js')
+    script(src='/shop/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js')
+    script(src='/shop/assets/vendor/js/menu.js')
+    // endbuild
+    // Vendors JS
+    // Main JS
+    script(src='/shop/assets/js/main.js')
+    // Page JS
+    // Place this tag in your head or just before your close body tag.
+    script(async='', defer='', src='/js/buttons.js')
+    //cid
+    script(src='/js/imask.min.js')
+    script(src='/js/script.js')

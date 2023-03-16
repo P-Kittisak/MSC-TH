@@ -1,0 +1,44 @@
+extends info
+block content
+  section
+        br
+        div(class="container d-flex justify-content-center")
+          h1.font-alt(style="color:#6C7AE0") ข้อมูลส่วนตัว
+        div(class="container d-flex justify-content-center")
+            .row
+              .col-sm-5.col-sm-offset-1.mb-sm-40
+              .table-responsive
+              hr.divider-w.mb-10
+              table.table.table-condensed(class="d-flex justify-content-center")
+                  tbody
+                      tr
+                        td 
+                          h5 ชื่อ-นามสกุล
+                        td
+                          h5=customer.fullname_user
+                        hr.divider-w.mb-10
+                      //- tr
+                      //-   td
+                      //-     h5 รหัสบัตรประชาชน
+                      //-   td
+                      //-     h5=customer.cid
+                      //-   hr.divider-w.mb-10
+                      tr
+                        td
+                          h5 อีเมล
+                        td
+                          h5=customer.email
+                        hr.divider-w.mb-10
+              div(class="container")         
+                form.dev-form(action='/Account/user' + '/edit', method='GET')
+                  button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit')
+                    i.fa.fa-edit
+                    = ' แก้ไขข้อมูลส่วนตัว'
+                form.dev-form(action='/Account/user' + '/changePassword', method='GET')
+                  button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit')
+                    i.fa.fa-key
+                    = ' เปลี่ยนรหัสผ่าน'
+                form.dev-form(action='/Account/user' + '/address', method='GET')
+                  button#button.flex-c-m.stext-101.cl0.size-121.bg3.bor1.hov-btn3.p-lr-15.trans-04.pointer(type='submit', value='confirm', tabindex='2', aria-label='Submit')
+                    i.fa.fa-edit
+                    = ' ที่อยู่'

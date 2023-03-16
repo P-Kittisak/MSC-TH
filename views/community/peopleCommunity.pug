@@ -1,0 +1,86 @@
+extends layoutCommunity
+block navbarMain
+  li.menu-item
+    a.menu-link(href='/community/home')
+      i.menu-icon.tf-icons.bx.bx-home-circle
+      div(data-i18n='Analytics') หน้าหลัก
+block navProduct
+  li.menu-item
+    a.menu-link(href='/community/product')
+      i.menu-icon(class="bi bi-folder")
+      div(data-i18n='Without menu') สินค้าชุมชน
+block bank
+  block bank
+  li.menu-item
+    a.menu-link(href='/community/orderSummary')
+      i.menu-icon(class="bi bi-reception-4")
+      div(data-i18n='Without menu') รายรับของชุมชน
+      
+block community
+  li.menu-header.small.text-uppercase
+    h6(style="color:#696cff") ชุมชน
+  li.menu-item.active.open
+    a.menu-link.menu-toggle(href='javascript:void(0);')
+      i.menu-icon.tf-icons.bx.bx-dock-top
+      div(data-i18n='Account Settings') จัดการชุมชน
+    ul.menu-sub
+      li.menu-item
+        a.menu-link(href='/community/people')
+          div(data-i18n='Connections') คำขอเข้าร่วมเป็นร้านค้าชุมชน
+      li.menu-item.active 
+        a.menu-link(href='/community/peopleCommunity')
+          div(data-i18n='Connections') สมาชิกชุมชน
+      li.menu-item
+        a.menu-link(href='/community/address')
+          div(data-i18n='Notifications') ที่อยู่ของชุมชน
+block profileShop
+  li.menu-header.small.text-uppercase
+    h6(style="color:#696cff") บัญชีผู้ใช้งาน
+  li.menu-item
+    a.menu-link(href='/community/communityProfile')
+      i.menu-icon.tf-icons.bx.bx-user
+      div(data-i18n='Tables') โปรไฟล์
+//- end navbar
+block contentShop
+  section
+    .container-xxl.flex-grow-1.container-p-y
+      h4.fw-bold.py-3.mb-4
+        span.text-muted.fw-light จัดการชุมชน /
+        |  สมาชิกในชุมชน
+      .card
+        .card-body.pt-3
+          .table-responsive.text-nowrap
+            table#peopleCommunityTable.table
+              thead
+                tr
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") ลำดับ
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") ชื่อ-นามสกุล
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") ชื่อร้านค้า
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") เบอร์โทรศัพท์
+                  //- th.text-center(scope='col' class="data-sortable" style="color:#696cff") รายได้
+              tbody.table-border-bottom-0
+                each people,index in peopleCommunity
+                  tr
+                    td.text-center=index+1
+                    td.text-center=people.people_Community_Fullname
+                    td.text-center=people.community_Shop_Name
+                    td.text-center=people.people_Community_Phone
+  script(src='/shop/assets/js/jquery.dataTables.min.js')
+  script(src='/shop/assets/js/dataTables.bootstrap5.min.js')
+  script.
+    $(document).ready( function (){
+      $('#peopleCommunityTable').DataTable({
+        "language": {
+          url:'/shop/assets/json/th.json'
+        },
+        "aLengthMenu": [[10, 20 , 100, 200, 500, 1000, -1], [10, 20, 100, 200, 500, 1000, "ทั้งหมด"]],
+        "iDisplayLength": 20,
+        "DisplayLength" : 20,
+        // "scrollY": "1000px",
+        "scrollCollapse": true,
+        "paging": true,
+        "footer":false,
+        "order": [],
+        //- dom: <"wrapper"flipt>,
+      });  
+    });

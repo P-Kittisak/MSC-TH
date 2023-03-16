@@ -1,0 +1,102 @@
+extends layoutAdmin
+block order
+  li.menu-item
+    a.menu-link(href='/admin' style="color:#696cff")
+      i.menu-icon.tf-icons.bx.bxs-widget
+      div(data-i18n='Analytics') สรุปยอดขายสินค้า
+  li.menu-item
+    a.menu-link(href='/admin/category' style="color:#696cff")
+      i.menu-icon.tf-icons.bx.bx-cube-alt
+      div(data-i18n='Analytics') จัดการหมวดหมู่สินค้า
+  li.menu-item.active
+    a.menu-link(href='/admin/request' style="color:#696cff")
+      i.menu-icon.tf-icons.bx.bx.bx-body
+      div(data-i18n='Analytics') คำร้องขอเพิ่มชุมชน
+  li.menu-item
+    a.menu-link(href='/admin/tranship' style="color:#696cff")
+      i.menu-icon.tf-icons.bx.bx-car
+      div(data-i18n='Analytics') จัดการค่าส่ง
+  li.menu-item
+    a.menu-link(href='/admin/changePassword' style="color:#696cff")
+      i.menu-icon.tf-icons.bx.bx-message-square-edit
+      div(data-i18n='Analytics') แก้ไขรหัสผ่าน
+//- end navbar
+block contentAdmin
+  section
+    .container-xxl.flex-grow-1.container-p-y
+      h4.fw-bold.py-3.mb-4
+        span.text-muted.fw-light 
+        | คำร้องขอเพิ่มชุมชน
+      .card
+        .card-body.pt-2
+          .table-responsive.text-nowrap
+            table#request(class="table table-bordered")
+              thead
+                tr.text-nowrap
+                  th.text-center(scope='col' style="color:#696cff") ลำดับ
+                  th.text-center(scope='col' style="color:#696cff") รหัสทะเบียนชุมชน
+                  th.text-center(scope='col' style="color:#696cff") ชื่อชุมชน
+                  th.text-center(scope='col' style="color:#696cff") ตำบล
+                  th.text-center(scope='col' style="color:#696cff") รหัสไปรษณีย์
+                  th.text-center(scope='col' style="color:#696cff")
+              tbody.table-border-bottom-0
+                each request,index in requestAddCommunity
+                  tr 
+                    td.text-center(style="width:10px")
+                      i.fab.fa-angular.fa-lg.text-danger.me-3
+                      |  
+                      strong=request.add_Community_Id
+                    td=request.community_code
+                    td(style="width:400px")=request.community_name.substring(0,50)+"..."
+                    td.text-center(style="width:100px")=request.tambons_name
+                    td.text-center=request.zip_code
+                    td
+                      .mt-0
+                        button(class="btn btn-outline-primary" data-bs-toggle='modal', data-bs-target='#confirm' + request.add_Community_Id) อนุมัติ
+                        button(class="btn btn-outline-danger" data-bs-toggle='modal', data-bs-target='#cancelRequest' + request.add_Community_Id) ไม่อนุมัติ
+                        .modal.fade(id="confirm" + request.add_Community_Id, tabindex='-1', aria-hidden='true')
+                          .modal-dialog.modal-dialog-centered(role='document')
+                            .modal-content
+                              .modal-header
+                                h2#confirm.modal-title(style="color:#696cff") ยืนยันการอนุมัติชุมชน
+                                button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+                              .modal-body
+                                input#addCommunityId.form-control(name='addCommunityId', type='text' value="คุณกำลังอนุมัติชุมชนชน: "+request.community_name readonly)
+                                h6(class="alert-dismissible fade show" role="alert" style="color:red") ***เมื่อกดยืนยันแล้วไม่สามารถยกเลิกได้โปรดระมัดระวังในการกด***
+                              .modal-footer
+                                form.dev-form(action='/admin/request/confirm/' + request.add_Community_Id, method='POST')
+                                  button.btn.btn-outline-danger(type='button', data-bs-dismiss='modal') ปิด
+                                  button.btn.btn-primary(type='submit') ยืนยัน
+                        .modal.fade(id="cancelRequest" + request.add_Community_Id, tabindex='-1', aria-hidden='true')
+                          .modal-dialog.modal-dialog-centered(role='document')
+                            .modal-content
+                              .modal-header
+                                h2#cancelRequest.modal-title(style="color:#696cff") ยืนยันการไม่อนุมัติชุมชน
+                                button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+                              .modal-body
+                                input#addCommunityId.form-control(name='addCommunityId', type='text' value="คุณกำลังไม่อนุมัติชุมชนชน: "+request.community_name readonly)
+                                h6.text-center(class="alert-dismissible fade show" role="alert" style="color:red") ***เมื่อกดยกเลิกแล้วไม่สามารถเปลี่ยนแปลงอีกครั้งได้***
+                                h6.text-center(class="alert-dismissible fade show" role="alert" style="color:red") ***โปรดระมัดระวังในการกด***
+                              .modal-footer
+                                form.dev-form(action='/admin/request/cancel/' + request.add_Community_Id, method='POST')
+                                  button.btn.btn-outline-primary(type='button', data-bs-dismiss='modal') ปิด
+                                  button.btn.btn-danger(type='submit' style="width200") ยืนยัน
+  script(src='/shop/assets/js/jquery.dataTables.min.js')
+  script(src='/shop/assets/js/dataTables.bootstrap5.min.js')
+  script.
+    $(document).ready( function (){
+      $('#request').DataTable({
+        "language": {
+          url:'/shop/assets/json/th.json'
+        },
+        "aLengthMenu": [[10, 20 , 100, 200, 500, 1000, -1], [10, 20, 100, 200, 500, 1000, "ทั้งหมด"]],
+        "iDisplayLength": 20,
+        "DisplayLength" : 20,
+        // "scrollY": "1000px",
+        "scrollCollapse": true,
+        "paging": true,
+        "footer":false,
+        "order": [],
+        //- dom: <"wrapper"flipt>,
+      }); 
+    });

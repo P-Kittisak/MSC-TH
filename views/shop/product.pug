@@ -1,0 +1,162 @@
+extends layoutShop
+block navbarMain
+  li.menu-item
+    a.menu-link(href='/shop/communityShop')
+      i.menu-icon.tf-icons.bx.bx-home-circle
+      div(data-i18n='Analytics') หน้าหลัก
+block navProduct
+  li.menu-item.active.open
+    a.menu-link.menu-toggle(href='javascript:void(0);')
+      i.menu-icon.tf-icons.bx.bx-layout
+      div(data-i18n='Layouts') จัดการสินค้าชุมชน
+    ul.menu-sub
+      li.menu-item.active
+        a.menu-link(href='/shop/product')
+          div(data-i18n='Without menu') สินค้าชุมชน
+      li.menu-item
+        a.menu-link(href='/shop/product/addProduct')
+          div(data-i18n='Without navbar') เพิ่มสินค้าชุมชน
+block bank
+  if(shop.user_status == 4)
+    li.menu-item
+      a.menu-link.menu-toggle(href='javascript:void(0);')
+        i.menu-icon.tf-icons.bx.bx-bar-chart-alt-2
+        div(data-i18n='Layouts') การเงิน
+      ul.menu-sub
+        li.menu-item
+          a.menu-link(href='/shop/money/orderSummary')
+            div(data-i18n='Without menu') ยอดขายสินค้าของร้านค้า
+        li.menu-item
+          a.menu-link(href='/shop/money/bank')
+            div(data-i18n='Without navbar') บัญชีธนาคาร
+block order
+  if(shop.user_status == 4)
+    li.menu-item
+      a.menu-link(href='/shop/order')
+        i.menu-icon.tf-icons.bx.bx-table
+        div(data-i18n='Tables') จัดการคำสั่งซื้อ
+block profileShop
+  li.menu-header.small.text-uppercase
+    h6(style="color:#696cff") บัญชีผู้ใช้งาน
+  li.menu-item
+    a.menu-link(href='/shop/shopProfile')
+      i.menu-icon.tf-icons.bx.bx-user
+      div(data-i18n='Tables') โปรไฟล์
+//- end navbar
+block contentShop
+  section
+    .container-xxl.flex-grow-1.container-p-y
+      h4.fw-bold.py-3.mb-4
+        span.text-muted.fw-light จัดการสินค้าชุมชน /
+        |  สินค้าชุมชน
+      .card
+        .card-body.pt-3
+          .table-responsive.text-nowrap
+            table#productShopTableTotal.table
+              thead
+                tr
+                  th.text-center(style="color:#696cff") รูปภาพ
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") ชื่อสินค้า
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") ราคา
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") จำนวน
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") หมวดหมู่
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") สถานะ
+                  th.text-center(style="color:#696cff") แอคชั่น
+              tbody.table-border-bottom-0
+                each shopProduct in product
+                  tr
+                    td.text-center
+                      a(href='/images/product/' + shopProduct.productImage target="_blank" title="สินค้า")
+                        img(width="100" height="100" src='/images/product/' + shopProduct.productImage alt="IMG-PRODUCT")
+                    if (shopProduct.product_Status == 0)
+                      if (shopProduct.product_Status_Quantity >= shopProduct.product_Quantity)
+                        if shopProduct.product_Name.length > 20
+                          td.text-center
+                            i.fab.fa-angular.fa-lg.text-danger.me-3
+                            |  
+                            strong(style="color:red")=shopProduct.product_Name.substring(0,20)+"..."
+                        else
+                          td.text-center
+                            i.fab.fa-angular.fa-lg.text-danger.me-3
+                            |  
+                            strong(style="color:red")=shopProduct.product_Name
+                        td.text-center(style="color:red")=shopProduct.product_Price
+                        td.text-center(style="color:red")=shopProduct.product_Quantity
+                        td.text-center(style="color:red")=shopProduct.category_Name.substring(0,15)+"..."
+                        if(shopProduct.product_Quantity == 0)
+                          td.text-center
+                            span(class="badge bg-danger") สินค้าหมดแล้ว
+                        else
+                          td.text-center
+                            span(class="badge bg-danger") สินค้าใกล้จะหมด
+                      else
+                        if shopProduct.product_Name.length > 20
+                          td.text-center
+                            i.fab.fa-angular.fa-lg.text-danger.me-3
+                            |  
+                            strong=shopProduct.product_Name.substring(0,20)+"..."
+                        else
+                          td.text-center
+                            i.fab.fa-angular.fa-lg.text-danger.me-3
+                            |  
+                            strong=shopProduct.product_Name
+                        td.text-center=shopProduct.product_Price
+                        td.text-center=shopProduct.product_Quantity
+                        td.text-center=shopProduct.category_Name.substring(0,15)+"..."
+                        td.text-center
+                          span(class="badge bg-success") ใช้งานอยู่
+                    else if(shopProduct.product_Status != 0)
+                      if shopProduct.product_Name.length > 20
+                        td.text-center
+                          i.fab.fa-angular.fa-lg.text-danger.me-3
+                          |
+                          strong(style="color:red")=shopProduct.product_Name.substring(0,20)+"..."
+                      else 
+                        td.text-center
+                          i.fab.fa-angular.fa-lg.text-danger.me-3
+                          |
+                          strong(style="color:red")=shopProduct.product_Name
+                      td.text-center(style="color:red")=shopProduct.product_Price
+                      td.text-center(style="color:red")=shopProduct.product_Quantity
+                      td.text-center(style="color:red")=shopProduct.category_Name.substring(0,15)+"..."
+                      td.text-center
+                        span(class="badge bg-danger") ยกเลิก
+                    td.text-center
+                      .mt-3
+                        a(href='/shop/product/' + shopProduct.product_Id +'/' + shopProduct.product_Name + '/editProduct')
+                          button(type='submit' class="btn btn-outline-primary") แก้ไขสินค้า
+                        button(class="btn btn-outline-warning" data-bs-toggle='modal', data-bs-target='#editStatusProduct' + shopProduct.product_Id) เปลี่ยนสถานะ
+                        // Modal edit category
+                        div(class="container d-flex justify-content-center")
+                          .modal.fade(id="editStatusProduct" + shopProduct.product_Id, tabindex='-1', aria-hidden='true')
+                            .modal-dialog.modal-dialog-centered(role='document')
+                              .modal-content
+                                .modal-header
+                                  h5#deleteCategoryTitle.modal-title(style="color:#696cff")="เปลี่ยนสถานะของสินค้า : " + shopProduct.product_Name
+                                  button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+                                .modal-footer
+                                  form.dev-form(action='/shop/product/' + shopProduct.product_Id + '/editStatusProduct0', method='POST')
+                                    button.btn.btn-success(type='submit') เปลี่ยนสถานะเป็นใช้งาน ปกติ
+                                  form.dev-form(action='/shop/product/' + shopProduct.product_Id + '/editStatusProduct1', method='POST')
+                                    button.btn.btn-danger(type='submit')="เปลี่ยนสถานะเป็น ยกเลิก (ไม่ได้ใช้งาน)"
+    .buy-now
+      a.btn.btn-primary.btn-lg.btn-buy-now(href='/shop/product/addProduct') เพิ่มสินค้า
+  script(src='/shop/assets/js/jquery.dataTables.min.js')
+  script(src='/shop/assets/js/dataTables.bootstrap5.min.js')
+  script.
+    $(document).ready( function (){
+      $('#productShopTableTotal').DataTable({
+        "language": {
+          url:'/shop/assets/json/th.json'
+        },
+        "aLengthMenu": [[10, 20 , 100, 200, 500, 1000, -1], [10, 20, 100, 200, 500, 1000, "ทั้งหมด"]],
+        "iDisplayLength": 20,
+        "DisplayLength" : 20,
+        // "scrollY": "1000px",
+        "scrollCollapse": true,
+        "paging": true,
+        "footer":false,
+        "order": [],
+        //- dom: <"wrapper"flipt>,
+      });
+    });

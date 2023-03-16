@@ -1,0 +1,166 @@
+extends layoutShop
+block images 
+  script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js")
+  script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js')
+block navbarMain
+  li.menu-item
+    a.menu-link(href='/shop/communityShop')
+      i.menu-icon.tf-icons.bx.bx-home-circle
+      div(data-i18n='Analytics') หน้าหลัก
+block navProduct
+  if(shop.user_status == 4)
+    li.menu-item.active.open
+      a.menu-link.menu-toggle(href='javascript:void(0);')
+        i.menu-icon.tf-icons.bx.bx-layout
+        div(data-i18n='Layouts') จัดการสินค้าชุมชน
+      ul.menu-sub
+        li.menu-item
+          a.menu-link(href='/shop/product')
+            div(data-i18n='Without menu') สินค้าชุมชน
+        li.menu-item.active
+          a.menu-link(href='/shop/product/addProduct')
+            div(data-i18n='Without navbar') เพิ่มสินค้าชุมชน
+        
+block bank
+  if(shop.user_status == 4)
+    li.menu-item
+      a.menu-link.menu-toggle(href='javascript:void(0);')
+        i.menu-icon.tf-icons.bx.bx-bar-chart-alt-2
+        div(data-i18n='Layouts') การเงิน
+      ul.menu-sub
+        li.menu-item
+          a.menu-link(href='/shop/money/orderSummary')
+            div(data-i18n='Without menu') ยอดขายสินค้าของร้านค้า
+        li.menu-item
+          a.menu-link(href='/shop/money/bank')
+            div(data-i18n='Without navbar') บัญชีธนาคาร  
+block order
+  if(shop.user_status == 4)
+    li.menu-item
+      a.menu-link(href='/shop/order')
+        i.menu-icon.tf-icons.bx.bx-table
+        div(data-i18n='Tables') จัดการคำสั่งซื้อ
+block profileShop
+  li.menu-header.small.text-uppercase
+    h6(style="color:#696cff") บัญชีผู้ใช้งาน
+  li.menu-item
+    a.menu-link(href='/shop/shopProfile')
+      i.menu-icon.tf-icons.bx.bx-user
+      div(data-i18n='Tables') โปรไฟล์
+//- end navbar
+block contentShop
+  section 
+    .container-xxl.flex-grow-1.container-p-y
+      h4.fw-bold.py-3.mb-4
+        span.text-muted.fw-light จัดการสินค้าชุมชน /
+        |  เพิ่มสินค้าชุมชน
+      .row
+        // Basic
+        form(action="/shop/product/addProduct", method="POST", enctype="multipart/form-data")
+          .col-md-12
+            .card.mb-4
+              h2.card-header(style="color:#696cff") เพิ่มสินค้าชุมชน
+                .card-body.demo-vertical-spacing.demo-only-element
+                  .input-group
+                    h5 ชื่อสินค้า
+                    .input-group
+                      input.form-control(name='productName', type='text',maxlength="90" placeholder='ชื่อสินค้า เช่น ผักออร์แกนิคและผักปลอดสารพิษ', aria-label='productName', aria-describedby='basic-addon11', autofocus required=true)
+                  .row
+                    .mb-3.col-md-6
+                      .input-group
+                        h5 จำนวน
+                        .input-group
+                          input.form-control(name='productQuantity', type='number', placeholder='จำนวน ขั้นต่ำ 1 ชิ้น สูงสุดไม่เกิน 99999',min="1" max="99999" aria-label='productQuantity', aria-describedby='basic-addon11' required=true)
+                          span.input-group-text ชิ้น
+                    .mb-3.col-md-6
+                      .input-group
+                        h5 ราคาสินค้า
+                        .input-group
+                          span.input-group-text ฿
+                          input.form-control(name='productPrice',type='number', placeholder='ราคาสินค้า ขั้นต่ำ 1 บาท สูงสุดไม่เกิน 999999',min="1" max="999999" required=true)
+                          span.input-group-text บาท
+                  .row
+                    .mb-3.col-md-6
+                      .input-group
+                        h5 เลือกหมวดหมู่ของสินค้า
+                        .input-group
+                          select#exampleFormControlSelect1.form-select(name="category" aria-label="Default select example"  required=true) 
+                            option(selected value='') กรุณาเลือกหมวดหมู่ของสินค้า
+                              -function loop(level) {
+                                -return function (a) {
+                                  -var i = level
+                                  -var s = ''
+                                  -var j=0
+                                  -var space ='\u00a0'
+                                  -while (i--) {
+                                    -s+='\u00a0'+'\u00a0'
+                                    -j++
+                                  -}
+                                  -if (level) {
+                                    -s +='-'
+                                    -j
+                                  -}
+                                  if a.category_Name.length > 25
+                                    option(value=a.category_Id)=s+a.category_Name.substring(0,25)+"..."
+                                  else 
+                                      option(value=a.category_Id)=s+a.category_Name
+                                  -Array.isArray(a.subCate) && a.subCate.forEach(loop(level + 1));
+                                  -}
+                              -}
+                              -var data = JSON.parse(categories)
+                              -data.forEach(loop(0));
+                    .mb-3.col-md-6
+                      .input-group
+                        h5 ใส่จำนวนขั้นต่ำของสินค้าที่ต้องการแสดงเตือนเมื่อสินค้าใกล้จะหมด
+                        .input-group
+                          input.form-control(name="productStatusQuantity",placeholder='เช่น 1 เมื่อสินค้าถึงจำนวนที่กำหนดจะเตือนเปลี่ยนเป็นสีแดง',min="1" max="999999", type='number' required=true)
+                          span.input-group-text ชิ้น
+                          h6(style="color:red") เช่น ใส่ 10 เมื่อสินค้าเหลือตั้งแต่ 10 หรือน้อยกว่าชื่อจะขึ้นเป็นสีแดงเตือนเพื่อให้รู้ว่าสินค้าใกล้หมดแล้ว
+                        each people in peopleCommunity
+                          input(name='peopleCommunityId',type='hidden' value=people.people_Community_Id)
+                    .mb-3.col-md-6
+                      .input-group
+                        h5 น้ำหนักสินค้า
+                        .input-group
+                          input.form-control(name='productWeight',type='number', placeholder='น้ำหนักของสินค้า เช่น 0.25, 1, 2.25, 5, 10',min="0" step="0.01" max="999999" pattern="^\d*(.\d{0,2})?$" required=true)
+                          span.input-group-text กิโลกรัม(กก.)
+                          h6(style="color:red") ***น้ำหนักของสินค้าจะถูกนำไปคิดค่าส่ง ซึ่งเรทค่าส่งจะอิงจาก ค่าส่ง Kerry***
+                          h6(style="color:red") ***หมายเหตุ น้ำหนักขั้นต่ำ 0.01 กก.(กิโลกรัม)***
+          .col-md-12
+            .card.mb-4
+              h5.card-header รายละเอียดสินค้า
+              .card-body
+                .form-floating
+                  input#floatingInput.form-control(name='productDetail' type='text',aria-describedby='floatingInputHelp', placeholder='เช่น ที่มา ผู้ผลิต ข้อมูลเกี่ยวกับสินค้า' required=true)
+                  label(for='floatingInput') รายละเอียดสินค้า
+          .col-md-12
+            .card.mb-4
+              .card-body
+                h5(for='defaultFormControlInput') รูปภาพสินค้า
+                div.file-loading
+                  input#input-24(name='image', type='file', multiple accept='image/png, image/jpeg, image/jpg' required=true)
+                #defaultFormControlHelp.form-text(style="color:red") สามารถเพิ่มรูปภาพได้สูงสุด 7 รูป และรูปแรกที่เลือกจะเป็นรูปโชว์สินค้าในหน้าแรกของคุณ กรุณาระมัดระวังในการเพิ่มรูปภาพ
+                br
+                .d-grid.gap-2.col-lg-6.mx-auto
+                  button.btn.btn-primary.btn-lg(type='submit') เพิ่มสินค้า            
+  script.
+    $(document).ready(function() {
+      $("#input-24").fileinput({
+        language: "th",
+        initialPreviewAsData: true,
+        enableResumableUpload: true,
+        initialPreviewAsData: true,
+        maxFileCount: 7,
+        theme: 'fa5',
+        showRemove: true,
+        showUpload: false,
+        fileActionSettings: {
+          showZoom: function(config) {
+            if (config.type === 'image') {
+              return true;
+            }
+            return false;
+          }
+        }
+      });
+    });

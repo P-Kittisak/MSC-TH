@@ -1,0 +1,165 @@
+extends ../layout
+block content
+  -function formatMoney(inum){  // ฟังก์ชันสำหรับแปลงค่าตัวเลขให้อยู่ในรูปแบบ เงิน
+    -var s_inum=new String(inum);
+    -var num2=s_inum.split(".");
+    -var n_inum="";  
+    -if(num2[0]!=undefined){
+    -var l_inum=num2[0].length;  
+    -for(i=0;i<l_inum;i++){  
+        -if(parseInt(l_inum-i)%3==0){  
+            -if(i==0){  
+                -n_inum+=s_inum.charAt(i);         
+            -}else{  
+                -n_inum+=","+s_inum.charAt(i);         
+            -}     
+        -}else{  
+            -n_inum+=s_inum.charAt(i);  
+        -}  
+    -}  
+    -}else{
+        -n_inum=inum;
+    -}
+    -if(num2[1]!=undefined){
+        -n_inum+="."+num2[1];
+    -}
+    -return n_inum;
+  -}
+  .container-xxl.flex-grow-1.container-p-y
+    .bread-crumb.flex-w.p-l-25.p-r-15.p-t-30.p-lr-0-lg
+      a.stext-109.cl8.hov-cl1.trans-04(href='/')
+        | หน้าหลัก
+        i.fa.fa-angle-right.m-l-9.m-r-10(aria-hidden='true')
+      a.stext-109.cl8.hov-cl1.trans-04(href='/cart')
+        | ตะกร้าสินค้า
+        i.fa.fa-angle-right.m-l-9.m-r-10(aria-hidden='true')
+      a.stext-109.cl8.hov-cl1.trans-04(href='/checkout/delivery')
+        | เลือกที่อยู่
+        i.fa.fa-angle-right.m-l-9.m-r-10(aria-hidden='true')
+      span.stext-109.cl4
+        | ตรวจสอบรายการสินค้า
+    // Shoping Cart
+  .container-xxl.flex-grow-1.container-p-y
+    .row
+      .col-lg-10.col-xl-7.m-lr-auto.m-b-50
+        .m-l-30.m-r--38.m-lr-0-xl
+          .wrap-table-shopping-cart
+            table.table-shopping-cart
+              thead
+                tr.table_head
+                  th.text-center ลำดับที่
+                  th
+                  th(class="container d-flex justify-content-center") สินค้า
+                  th ราคา
+                  th(class="container d-flex justify-content-center") จำนวน
+                  th ราคารวม
+                  th
+              tbody
+                if cart.length > 0
+                  each item,index in cart
+                    -var quantity = item.quantity;
+                    tr.table_row
+                      if item.product_Quantity == 0
+                        td.text-center=index+1
+                        h6(style="color:red" class="container d-flex justify-content-center") สินค้าหมด
+                      else
+                        td.text-center=index+1
+                      td
+                        .how-itemcart
+                          a(href="/cat/" + item.category_Name + "/" + item.product_Id + "/" + item.product_Name)
+                            img(class="container d-flex justify-content-center" width="100" height="100" src='/images/product/' + item.productImage, alt=item.product_Name)
+                      td
+                        if item.product_Name.length > 30
+                          a(href="/cat/" + item.category_Name + "/" + item.product_Id + "/" + item.product_Name)=item.product_Name.substring(0,30)+"..."
+                          br
+                          if item.community_Shop_Name.length > 30
+                            a=item.community_Shop_Name.substring(0,30)+"..."
+                          else
+                            a=item.community_Shop_Name
+                        else
+                          a(href="/cat/" + item.category_Name + "/" + item.product_Id + "/" + item.product_Name)=item.product_Name
+                          br
+                          if item.community_Shop_Name.length > 30
+                            a=item.community_Shop_Name.substring(0,30)+"..."
+                          else
+                            a=item.community_Shop_Name
+                      td=formatMoney(item.product_Price)
+                        p 
+                      td
+                        form(action='/cart/' + item.product_Id + '/update', method='POST' class="container d-flex justify-content-center")
+                          input.mtext-104.cl3.txt-center.num-product(type='number', name=item.product_Id, value=quantity max=item.product_Quantity)
+                        if item.product_Quantity == 0
+                          div(class="container d-flex justify-content-center") 
+                            p(style="color:red")="เหลือสินค้าอยู่ " + item.product_Quantity + " ชิ้น"
+                        else if item.product_Quantity <= 10
+                          div(class="container d-flex justify-content-center") 
+                            p(style="color:red")="เหลือสินค้าอยู่ " + item.product_Quantity + " ชิ้น"
+                      td="฿ " + formatMoney(item.productTotal)
+                      td
+                        form(action='/cart/' + item.product_Id + '/delete', method='POST')
+                          button.btn.btn-outline-danger(type="submit" value=item.product_Id)
+                            i.fa.fa-times
+                else
+                  tr.table_row
+                    td
+                    td
+                    td
+                    td
+                      a(href="/")
+                        h4(style="color:red" class="container d-flex justify-content-center") ยังไม่มีสินค้าอยู่ในตะกร้า
+                        h4(style="color:red" class="container d-flex justify-content-center") ช้อปที่นี่
+          label(style="color:red") ***หมายเหตุ ค่าส่งจะคิดตามน้ำหนักของสินค้า ซึ่งเรทราคาค่าส่งจะอิงจาก Kerry***
+      if (summary != null && summary.totalQuantity != 0)
+        .col-sm-10.col-lg-7.col-xl-5.m-lr-auto.m-b-50
+          .bor10.p-lr-40.p-t-30.p-b-40.m-l-63.m-r-40.m-lr-0-xl.p-lr-15-sm
+            h2.text-center(style="color:#6c7ae0") ที่อยู่ในการจัดส่ง
+            table(style="width:100%")
+              tbody
+                tr
+                  td
+                    h5(style="color:#6c7ae0")="ชื่อ"
+                  td(class="font-weight-bold")
+                    h5='\u00a0'+address.fullname
+                tr
+                  td(style="width:10%")
+                    h5(style="color:#6c7ae0")="ที่อยู่:"
+                  td
+                    h5='\u00a0'+address.address
+                tr 
+                  td 
+                  td
+                    h5='\u00a0'+address.amphures_name + " " + address.tambons_name
+                tr 
+                  td 
+                  td
+                    h5='\u00a0'+address.provinces_name + " " + address.zip_code
+                tr 
+                  td 
+                  td
+                    h5='\u00a0'+"โทร." + address.phone
+            hr.divider-w.mb-10
+            h3.text-center(style="color:#6c7ae0")="สรุปรายการคำสั่งซื้อ"
+              .size-220
+                span.mtext-101.cl2="รวมสินค้า ( " + summary.totalQuantity + " ชิ้น ) "
+                span.mtext-101.cl2(style="color:#6c7ae0")=formatMoney(summary.subTotal)
+                hr.divider-w.mb-10
+                if customer
+                  if cart.length > 0
+                    if checkedCommunityShopName != ''
+                      if ProQuan != ''
+                        h3(class="alert-dismissible fade show" role="alert" style="color:red")=checkedCommunityShopName+"และ"+ProQuan
+                      else
+                        h3(class="alert-dismissible fade show" role="alert" style="color:red")=checkedCommunityShopName
+                    else if ProQuan != ''
+                      if checkedCommunityShopName != ''
+                        h3(class="alert-dismissible fade show" role="alert" style="color:red")=checkedCommunityShopName+"และ"+ProQuan
+                      else 
+                        h3(class="alert-dismissible fade show" role="alert" style="color:red")=ProQuan
+                    else
+                        a(href='/checkout/refresh')
+                          button.flex-c-m.stext-101.cl0.size-116.bg3.bor14.hov-btn3.p-lr-15.trans-04.pointer(style="background-color:#a52a2a;")
+                            | ตรวจสอบรายการสินค้า
+  script(src='/vendor/jquery/jquery-3.2.1.min.js')
+  script(src='/js/bootstrap-input-spinner.js')
+  script.
+    $("input[type='number']").inputSpinner();

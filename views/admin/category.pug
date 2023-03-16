@@ -1,0 +1,161 @@
+extends layoutAdmin
+block order
+  li.menu-item
+    a.menu-link(href='/admin' style="color:#696cff")
+      i.menu-icon.tf-icons.bx.bxs-widget
+      div(data-i18n='Analytics') สรุปยอดขายสินค้า
+  li.menu-item.active
+    a.menu-link(href='/admin/category' style="color:#696cff")
+      i.menu-icon.tf-icons.bx.bx-cube-alt
+      div(data-i18n='Analytics') จัดการหมวดหมู่สินค้า
+  li.menu-item
+    a.menu-link(href='/admin/request' style="color:#696cff")
+      i.menu-icon.tf-icons.bx.bx-body
+      div(data-i18n='Analytics') คำร้องขอเพิ่มชุมชน
+  li.menu-item
+    a.menu-link(href='/admin/tranship' style="color:#696cff")
+      i.menu-icon.tf-icons.bx.bx-car
+      div(data-i18n='Analytics') จัดการค่าส่ง
+  li.menu-item
+    a.menu-link(href='/admin/changePassword' style="color:#696cff")
+      i.menu-icon.tf-icons.bx.bx-message-square-edit
+      div(data-i18n='Analytics') แก้ไขรหัสผ่าน
+//- end navbar
+block contentAdmin
+  section
+    .container-xxl.flex-grow-1.container-p-y
+      h4.fw-bold.py-3.mb-4
+        span.text-muted.fw-light
+        |  หมวดหมู่สินค้า
+      .card
+        .card-body.pt-3
+          if Checkedcategory
+            if(checkOutNoti != '')
+              div(class="container d-flex justify-content-center")
+                h2(class="alert-dismissible fade show" role="alert" style="color:red")=Checkedcategory
+                br
+            else
+              div(class="container d-flex justify-content-center")
+                h2(class="alert-dismissible fade show" role="alert" style="color:red")=checkOutNoti
+          else
+            div(class="container d-flex justify-content-center")
+              h2(class="alert-dismissible fade show" role="alert" style="color:red")=Checkedcategory
+              br
+          .table-responsive.text-nowrap
+            table#categoryTable.table
+              thead
+                tr
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") ลำดับ
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") ชื่อหมวดหมู่
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff") ตำแหน่งหมวดหมู่
+                  th.text-center(scope='col' class="data-sortable" style="color:#696cff")
+              tbody.table-border-bottom-0
+                each Category in category
+                  tr
+                    td.text-center=Category.category_Id
+                    td.text-center=Category.category_Name
+                    if Category.ref_Category_Id == 0
+                      td.text-center
+                        div(class="demo-inline-spacing")
+                          span(class="badge bg-label-primary") หมวดหมู่หลัก
+                    else
+                      td.text-center 
+                        div(class="demo-inline-spacing")
+                          span(class="badge bg-label-success")="หมวดหมู่รองของ "+Category.ref_Category_Id 
+                    td.text-center
+                      .mt-3
+                        // Button trigger modal
+                        button.btn.btn-primary(type='button', data-bs-toggle='modal', data-bs-target='#editCategory' + Category.category_Id) แก้ไขหมวดหมู่
+                        button.btn.btn-danger(type='button', data-bs-toggle='modal', data-bs-target='#deleteCategory' + Category.category_Id) ลบ 
+                        // Modal edit category
+                        form.dev-form(class="container d-flex justify-content-center", action='/admin/category/' + Category.category_Id +'/editCategory', method='POST')
+                          .modal.fade(id="editCategory" + Category.category_Id, tabindex='-1', aria-hidden='true')
+                            .modal-dialog.modal-dialog-centered(role='document')
+                              .modal-content
+                                .modal-header
+                                  h2#editCategoryTitle.modal-title(style="color:#696cff") แก้ไขหมวดหมู่
+                                  button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+                                .modal-body
+                                  .row
+                                    .col.mb-3
+                                      h5(for='nameWithTitle') ชื่อหมวดหมู่ใหม่
+                                      input#categoryName.form-control(name='categoryName', type='text',maxlength="70", placeholder='ชื่อหมวดหมู่ใหม่', value=Category.category_Name required=true)
+                                      h6(class="alert-dismissible fade show" role="alert" style="color:red") จำกัดไม่เกิน 70 ตัวอักษร
+                                .modal-footer
+                                  button.btn.btn-danger(type='button', data-bs-dismiss='modal') ปิด
+                                  button.btn.btn-primary(type='submit') ยืนยันการเปลี่ยนแปลง
+                        //Modal delete category
+                        form.dev-form(class="container d-flex justify-content-center", action='/admin/category/' + Category.category_Id +'/deleteCategory', method='POST')
+                          .modal.fade(id="deleteCategory" + Category.category_Id, tabindex='-1', aria-hidden='true')
+                            .modal-dialog.modal-dialog-centered(role='document')
+                              .modal-content
+                                .modal-header
+                                  h2#deleteCategoryTitle.modal-title(style="color:#696cff") ยืนยันการลบหมวดหมู่
+                                  button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+                                .modal-body
+                                  input#categoryName.form-control(name='categoryName', type='text', value=Category.category_Name readonly)
+                                .modal-footer
+                                  button.btn.btn-primary(type='button', data-bs-dismiss='modal') ปิด
+                                  button.btn.btn-danger(type='submit') ยืนยันการลบหมวดหมู่
+                        //Modal add category
+                        form.dev-form(class="container d-flex justify-content-center", action='/admin/category/addCategory', method='POST')
+                          .modal.fade(id="addCategory", tabindex='-1', aria-hidden='true')
+                            .modal-dialog.modal-dialog-centered(role='document')
+                              .modal-content
+                                .modal-header
+                                  h2#addCategoryTitle.modal-title(style="color:#696cff") เพิ่มหมวดหมู่
+                                  button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+                                .modal-body
+                                  .row
+                                    .col.mb-3
+                                      h5(for='nameWithTitle') ชื่อหมวดหมู่
+                                      input.form-control(name='categoryName',maxlength="70", type='text', placeholder='ชื่อหมวดหมู่ เช่น อาหารสำเร็จรูป อาหารแห้ง ของประดิษฐ์', aria-label='productName', aria-describedby='basic-addon11', autofocus="" required=true)
+                                      h6(class="alert-dismissible fade show" role="alert" style="color:red") จำกัดไม่เกิน 70 ตัวอักษร
+                                      br
+                                      select#exampleFormControlSelect1.form-select(name="refCategoryId" required=true) 
+                                        option(value=0) --ไม่มีหมวดหมู่รอง(เป็นหมวดหมู่หลัก)--
+                                          -function loop(level) {
+                                            -return function (a) {
+                                              -var i = level
+                                              -var s = ''
+                                              -var j=0
+                                              -var space ='\u00a0'
+                                              -while (i--) {
+                                                -s+='\u00a0'+'\u00a0'
+                                                -j++
+                                              -}
+                                              -if (level) {
+                                                -s +='-'
+                                                -j
+                                              -}
+                                              option(value=a.category_Id)=s+a.category_Name
+                                              -Array.isArray(a.subCate) && a.subCate.forEach(loop(level + 1));
+                                            -}
+                                          -}
+                                          -var data = JSON.parse(categories)
+                                          -data.forEach(loop(0));
+                                .modal-footer
+                                  button.btn.btn-danger(type='button', data-bs-dismiss='modal') ปิด
+                                  button.btn.btn-primary(type='submit') เพิ่มหมวดหมู่สินค้า
+    .buy-now
+      a.btn.btn-primary.btn-lg.btn-buy-now(href='/admin/category/addCategory' data-bs-toggle='modal', data-bs-target='#addCategory') เพิ่มหมวดหมู่สินค้า
+  script(src='/shop/assets/js/jquery.dataTables.min.js')
+  script(src='/shop/assets/js/dataTables.bootstrap5.min.js')
+  script.
+    $(document).ready( function (){
+      $('#categoryTable').DataTable({
+        "language": {
+          url:'/shop/assets/json/th.json'
+        },
+        "aLengthMenu": [[10, 20 , 100, 200, 500, 1000, -1], [10, 20, 100, 200, 500, 1000, "ทั้งหมด"]],
+        "iDisplayLength": 20,
+        "DisplayLength" : 20,
+        // "scrollY": "1000px",
+        "scrollCollapse": true,
+        "paging": true,
+        "footer":false,
+        "order": [],
+        //- dom: <"wrapper"flipt>,
+      }); 
+    });
+    

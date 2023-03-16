@@ -1,0 +1,137 @@
+extends layoutShop
+block navbarMain
+  li.menu-item
+    a.menu-link(href='/shop/communityShop')
+      i.menu-icon.tf-icons.bx.bx-home-circle
+      div(data-i18n='Analytics') หน้าหลัก
+block navProduct
+  li.menu-item
+    a.menu-link.menu-toggle(href='javascript:void(0);')
+      i.menu-icon.tf-icons.bx.bx-layout
+      div(data-i18n='Layouts') จัดการสินค้าชุมชน
+    ul.menu-sub
+      li.menu-item
+        a.menu-link(href='/shop/product')
+          div(data-i18n='Without menu') สินค้าชุมชน
+      li.menu-item
+        a.menu-link(href='/shop/product/addProduct')
+          div(data-i18n='Without navbar') เพิ่มสินค้าชุมชน
+      
+block bank
+  if(shop.user_status == 4)
+    li.menu-item
+      a.menu-link.menu-toggle(href='javascript:void(0);')
+        i.menu-icon.tf-icons.bx.bx-bar-chart-alt-2
+        div(data-i18n='Layouts') การเงิน
+      ul.menu-sub
+        li.menu-item
+          a.menu-link(href='/shop/money/orderSummary')
+            div(data-i18n='Without menu') ยอดขายสินค้าของร้านค้า
+        li.menu-item
+          a.menu-link(href='/shop/money/bank')
+            div(data-i18n='Without navbar') บัญชีธนาคาร
+block order
+  if(shop.user_status == 4)
+    li.menu-item.active
+      a.menu-link(href='/shop/order')
+        i.menu-icon.tf-icons.bx.bx-table
+        div(data-i18n='Tables') จัดการคำสั่งซื้อ
+block profileShop
+  li.menu-header.small.text-uppercase
+    h6(style="color:#696cff") บัญชีผู้ใช้งาน
+  li.menu-item
+    a.menu-link(href='/shop/shopProfile')
+      i.menu-icon.tf-icons.bx.bx-user
+      div(data-i18n='Tables') โปรไฟล์
+//- end navbar
+block contentShop
+  section
+    .container-xxl.flex-grow-1.container-p-y
+      h4.fw-bold.py-3.mb-4
+        span.text-muted.fw-light จัดการคำสั่งซื้อ /
+        |  คำสั่งซื้อ
+      .row
+        .col-md-15
+          ul.nav.nav-pills.flex-column.flex-md-row.mb-3
+            li.nav-item
+              a.nav-link.text-center(href='/shop/order')
+                |  ทั้งหมด
+            li.nav-item
+              a.nav-link.active.text-center(href='/shop/order/preparingToShip')
+                |  กำลังจัดเตรียมพัสดุ
+            li.nav-item
+              a.nav-link.text-center(href='/shop/order/success')
+                |  จัดส่งแล้ว
+            li.nav-item
+              a.nav-link.text-center(href='/shop/order/cancel')
+                |  ยกเลิกคำสั่งซื้อ
+          .card
+            .card-body.pt-3
+              .table-responsive.text-nowrap
+                table#orderTableTotal(class="table table-bordered")
+                  thead
+                    tr
+                      th.text-center(scope='col' style="color:#696cff,width=50px") หมายเลขคำสั่งซื้อ
+                      th.text-center(scope='col' style="color:#696cff") วันที่สั่งซื้อ
+                      th.text-center(scope='col' style="color:#696cff") สลิปการโอนเงิน
+                      th.text-center(scope='col' style="color:#696cff") วันที่แนบสลิป
+                      th.text-center(scope='col' style="color:#696cff") ยอดรวม
+                      th.text-center(scope='col' style="color:#696cff") สถานะ
+                      th.text-center(scope='col' style="color:#696cff")
+                  tbody.table-border-bottom-0
+                    each Order,index in order
+                      tr
+                        td.text-center(style="width:10%")
+                          a(href='/shop/order/detail/'+Order.order_Id)
+                            i.fab.fa-angular.fa-lg.text-danger.me-3
+                            |
+                            strong=Order.order_Id
+                        td=Order.created_At
+                        if Order.bank_Slip == null
+                          td.text-center(style="color:red") ยังไม่มี
+                          td.text-center(style="color:red") ยังไม่มี
+                        else
+                          td.text-center
+                            a(href="/images/slip/" + Order.bank_Slip target="_blank")
+                              img#img(width="100" height="100"  src="/images/slip/" + Order.bank_Slip)
+                          td.text-center=Order.bank_Slip_DateTime
+                        td.text-center=Order.net_Price
+                        td.text-center
+                          span(class="badge bg-label-warning") กำลังจัดเตรียมพัสดุ
+                        td.text-center
+                          .mt-3
+                            button(class="btn btn-outline-primary" data-bs-toggle='modal', data-bs-target='#tracking' + Order.order_Id) ใส่หมายเลขพัสดุ
+                            form.dev-form(class="container d-flex justify-content-center", action='/shop/order/tracking/' + Order.order_Id, method='POST')
+                              .modal.fade(id="tracking" + Order.order_Id, tabindex='-1', aria-hidden='true')
+                                .modal-dialog.modal-dialog-centered(role='document')
+                                  .modal-content
+                                    .modal-header
+                                      h3#tracking.modal-title(style="color:#696cff")="ใส่หมายเลขพัสดุของหมายเลขคำสั่งซื้อ : #" +Order.order_Id
+                                      button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+                                    .modal-body
+                                      input#tracking.form-control(name='tracking', type='text' placeholder="ใส่หมายเลขพัสดุ" minlength="1" maxlength="30" required=true)
+                                      //- label(class="alert-dismissible fade show" role="alert" style="color:red")="ตอนนี้คุณกำลังใส่เลขพัสดุของหมายเลขคำสั่งซื้อ : #" +Order.order_Id
+                                    .modal-footer
+                                      button.btn.btn-outline-danger(type='button', data-bs-dismiss='modal') ปิด
+                                      button.btn.btn-outline-primary(type='submit') ยืนยัน 
+    .buy-now
+      a.btn.btn-primary.btn-lg.btn-buy-now(href='/shop/money/orderSummary') ดูยอดขายสินค้าของร้านค้า
+  script(src='/shop/assets/js/jquery.dataTables.min.js')
+  script(src='/shop/assets/js/dataTables.bootstrap5.min.js')
+  script.
+    $(document).ready( function (){
+      $('#orderTableTotal').DataTable({
+        "language": {
+          url:'/shop/assets/json/th.json'
+        },
+        "aLengthMenu": [[10, 20 , 100, 200, 500, 1000, -1], [10, 20, 100, 200, 500, 1000, "ทั้งหมด"]],
+        "iDisplayLength": 20,
+        "DisplayLength" : 20,
+        // "scrollY": "1000px",
+        "scrollCollapse": true,
+        "paging": true,
+        "footer":false,
+        "order": [],
+        //- dom: <"wrapper"flipt>,
+      }); 
+    });

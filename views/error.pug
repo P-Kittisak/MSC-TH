@@ -1,0 +1,67 @@
+doctype html
+html.light-style.layout-menu-fixed(lang='th', dir='ltr', data-theme='theme-default', data-assets-path='/shop/assets/', data-template='vertical-menu-template-free')
+  head
+    meta(name='viewport', content='width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
+    title= 'หาหน้าไม่พบ | MSC TH'
+    meta(charset='UTF-8')
+    meta(name='description', content='')
+    // Fonts
+    style.
+      @import url('/fonts/font-awesome-4.7.0/fonts/Kanit.css');
+      body{
+        font-family: 'Kanit', sans-serif !important;
+      }
+    // Icons. Uncomment required icon fonts
+    link(rel='stylesheet', href='/shop/assets/vendor/fonts/boxicons.css')
+    link(rel='icon' type='image/png' href='/images/icons/Logo-msc-mini.png')
+    // Core CSS
+    link.template-customizer-core-css(rel='stylesheet', href='/shop/assets/vendor/css/core.css')
+    link.template-customizer-theme-css(rel='stylesheet', href='/shop/assets/vendor/css/theme-default.css')
+    link(rel='stylesheet', href='/shop/assets/css/demo.css')
+    // Vendors CSS
+    link(rel='stylesheet', href='/shop/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')
+    // Page CSS
+    // Page
+    link(rel='stylesheet', href='/shop/assets/vendor/css/pages/page-auth.css')
+    // Helpers
+    script(src='/shop/assets/vendor/js/helpers.js')
+    // ! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section
+    // ? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.
+    script(src='/shop/assets/js/config.js')
+  body
+    br
+    br
+    br
+    .container-xxl.container-p-y(class="d-flex justify-content-center")
+      .misc-wrapper
+        h2.mb-2.mx-2.text-center Page Not Found :(
+        h6.mb-2.mx-2.text-center(style="color:red") หาหน้าไม่พบ :(
+        p.mb-4.mx-2.text-center Oops! &#x1F616; The requested URL was not found on this server.
+        .mt-3(class="d-flex justify-content-center")
+          img.img-fluid(src='/shop/assets/img/illustrations/page-misc-error-light.png', alt='page-misc-error-light', width='500', data-app-dark-img='illustrations/page-misc-error-dark.png', data-app-light-img='illustrations/page-misc-error-light.png')
+        h1(class="d-flex justify-content-center mb-2 mx-2")= message
+        h2(class="d-flex justify-content-center mb-2 mx-2")= error.status
+        pre #{error.stack}
+        br
+        a.btn.btn-primary(class="d-flex justify-content-center" href='/') กลับไปหน้าแรก
+        
+    // /Error
+    // / Content
+  script(src='/shop/assets/vendor/libs/jquery/jquery.js')
+  script(src='/shop/assets/vendor/libs/popper/popper.js')
+  script(src='/shop/assets/vendor/js/bootstrap.js')
+  script(src='/shop/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js')
+  script(src='/shop/assets/vendor/js/menu.js')
+  // endbuild
+  // Vendors JS
+  // Main JS
+  script(src='/shop/assets/js/main.js')
+  // Page JS
+  // Place this tag in your head or just before your close body tag.
+  script(async='', defer='', src='/js/buttons.js')
+    //- div(class="container-xxl container-p-y")
+    //-   div(class="misc-wrapper")
+    //-     h1(class="mb-2 mx-2")= message
+    //-     h2(class="mb-2 mx-2")= error.status
+    //-     a(href="/" class="btn btn-primary") กลับไปหน้าแรก
+    //-     pre #{error.stack}
