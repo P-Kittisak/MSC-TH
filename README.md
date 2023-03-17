@@ -8,6 +8,7 @@ Step 3	when your open cmd or termial use " npm install "
 Step 4	when your open cmd or termial use " npm start " to open server
 
 Step 5	If Error go to floder config and open files Config.js or App.js
+
         change in config only
                 production: {
                 username: 'your user',
