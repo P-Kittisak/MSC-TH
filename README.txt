@@ -13,7 +13,7 @@ Step 5	If Error go to floder config and open files Config.js or App.js
                 production: {
                 username: 'your user',
                 password: 'your password',
-                database: 'Platform',
+                database: 'msc_thailand',
                 host: 'your localhost',
                 dialect: 'mysql',
                 port:'3306',
