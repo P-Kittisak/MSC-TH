@@ -146,7 +146,7 @@ router.route('/delivery/:id')
     });
 
 router.route('/confirm')
-    .get(isLoggedIn, function (req, res) {
+    .get(isLoggedIn, async function (req, res) {
         if (!req.isAuthenticated()) {
             res.redirect('/');
         }
