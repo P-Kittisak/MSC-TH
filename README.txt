@@ -1,5 +1,4 @@
 # MSC-TH -> ระบบตลาดสื่อกลางเพื่อจำหน่ายสินค้าชุมชน(Marketplace system for selling community product)
-Step 0 npm install
 
 Step 1	import your database
 
